@@ -1,0 +1,28 @@
+{
+  "version" : {
+    "major_version" : 3,
+    "minor_version" : 1
+  },
+  "live" : {
+    "wait_between_collect_data" : 2000,
+    "isHTTPS" : false,
+    "url" : "10.0.0.100",
+    "port" : 5000,
+    "time_out" : 1,
+    "sections": {
+      "health_check" : "api/Session/health_check",
+      "get_live_session" : "api/Session/live",
+      "get_all_sessions" : "api/Session/all",
+      "post_new_session" : "api/Session/",
+      "change_session_to_live" : "api/Session/change_live",
+      "change_session_to_offline" : "api/Session/change_offline",
+      "change_session_name" : "api/Session/change_name",
+      "delete_session" : "api/Session/?sessionId=",
+      "active_session_sensors": "api/Session/active_session_sensors",
+      "get_package_by_id" : "/api/Package/get_single",
+      "get_packages_after" : "/api/Package/get_after",
+      "get_all_packages" : "/api/Package/get_all",
+      "get_all_sensors" : "/api/Sensor/get_all"
+    }
+  }
+}

@@ -1,0 +1,125 @@
+﻿<Application x:Class="UI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:UI.Converters"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                        <ResourceDictionary Source="Themes/UiDesign.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+
+                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary}"/>
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary}"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Secondary}"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource White}"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary}"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary}"/>
+
+                </ResourceDictionary>
+
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource Primary}"/>
+                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Accent}"/>
+                </ResourceDictionary>
+
+                <!-- Include the Dragablz Material Design style -->
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}">
+               
+            </Style>
+
+            <converters:MathMultipleConverter x:Key="MathMultipleConverter" Operation="Multiply" />
+
+            <Style TargetType="materialDesign:Snackbar">
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignPaper}" />
+                <Setter Property="Background" Value="{DynamicResource MaterialDesignSnackbarBackground}" />
+                <Setter Property="ActionButtonStyle" Value="{StaticResource MaterialDesignSnackbarActionButton}" />
+                <Setter Property="MinWidth" Value="288" />
+                <Setter Property="MaxWidth" Value="568" />
+                <Setter Property="ClipToBounds" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="materialDesign:Snackbar">
+                            <ControlTemplate.Resources>
+                                <Storyboard x:Key="ActivateStoryboard" Duration="0:0:0.3">
+                                    <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="Tag" From="0" To="1" Duration="0:0:0.3">
+                                        <DoubleAnimation.EasingFunction>
+                                            <SineEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="0" BeginTime="0" Duration="0" />
+                                    <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" From="0" To="1" BeginTime="0:0:0.075"
+                                             Duration="0:0:0.225">
+                                        <DoubleAnimation.EasingFunction>
+                                            <SineEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                                <Storyboard x:Key="DeactivateStoryboard" Duration="0:0:0.3">
+                                    <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="Tag" From="1" To="0" Duration="0:0:0.3">
+                                        <DoubleAnimation.EasingFunction>
+                                            <SineEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </ControlTemplate.Resources>
+                            <StackPanel x:Name="Root">
+                                <StackPanel.Tag>
+                                    <System:Double>0.0</System:Double>
+                                </StackPanel.Tag>
+                                <StackPanel.Height>
+                                    <MultiBinding Converter="{StaticResource MathMultipleConverter}">
+                                        <Binding ElementName="ContentBorder" Path="ActualHeight" />
+                                        <Binding RelativeSource="{RelativeSource Self}" Path="Tag" />
+                                    </MultiBinding>
+                                </StackPanel.Height>
+                                <Border x:Name="ContentBorder"
+                                Background="{TemplateBinding Background}" CornerRadius="{DynamicResource SnackbarCornerRadius}" SnapsToDevicePixels="True"
+                                VerticalAlignment="Stretch"
+                                MinHeight="48">
+                                    <ContentPresenter Content="{TemplateBinding Message}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}"
+                                              x:Name="ContentPresenter" />
+                                </Border>
+                            </StackPanel>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsActive" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard Storyboard="{StaticResource ActivateStoryboard}" />
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard Storyboard="{StaticResource DeactivateStoryboard}" />
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                                <Trigger Property="HorizontalAlignment" Value="Stretch">
+                                    <Setter TargetName="ContentBorder" Property="CornerRadius" Value="0" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="HorizontalAlignment" Value="Stretch">
+                        <Setter Property="MaxWidth" Value="{x:Static System:Double.MaxValue}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,44 @@
+sequenceDiagram
+    participant Raspberry
+    participant Server
+
+    loop infinite loop
+        alt can't send data
+            Raspberry ->> Server: get live section
+            activate Raspberry
+            activate Server
+                Server -->> Raspberry: Return result
+            deactivate Server
+
+            alt Result is ok
+                Note over Raspberry: Set can send data to true
+                Note over Raspberry: Set live section ID to the recieved sections ID
+            else
+                Note over Raspberry: Write message to console: "Can't connect to the sever"
+            end
+        else can send data
+            alt buffer size is equals to the maximum buffer size
+                loop while data sending is successfull
+                    Raspberry ->> Server: Post buffer to live section
+                    activate Server
+                        Server -->> Raspberry: Return result
+                    deactivate Server
+                    alt Result is ok
+                        Note over Raspberry: Set data sending to not successfull
+                    else
+                        Note over Raspberry: Write message to console: "Can't connect to the sever"
+                    end
+
+                    opt Data couldn't sent
+                        Note over Raspberry: Write message to console: "An error occurred while sending data"
+                    end
+                end
+
+                Note over Raspberry: Write message to console: "Data sent successfully"
+                Note over Raspberry: Clear buffer
+            else
+                Note over Raspberry: Add actual data to buffer
+            end
+        end
+        deactivate Raspberry
+    end

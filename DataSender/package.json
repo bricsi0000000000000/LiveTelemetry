@@ -1,0 +1,24 @@
+{
+  "sessionId": 1,
+  "sentTime": 1630756614.662582,
+  "sensors": 
+  [
+    {
+      "sensorId": 0,
+      "name": "delta_tar",
+      "value": 36.87
+    }
+    ,
+    {
+      "sensorId": 1,
+      "name": "vx",
+      "value": 0.0
+    }
+    ,
+    {
+      "sensorId": 2,
+      "name": "yawrate",
+      "value": 0.0
+    }
+  ]
+}

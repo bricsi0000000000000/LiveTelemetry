@@ -1,0 +1,375 @@
+﻿<UserControl x:Class="UI.UserControls.Settings.LiveSettingsMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:custom="clr-namespace:UI.CustomControls"
+             xmlns:validation="clr-namespace:UI.ValidationRules"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="1100"
+             d:DataContext="{d:DesignInstance validation:FieldsViewModel, IsDesignTimeCreatable=False}">
+    <materialDesign:DialogHost HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               CloseOnClickAway="True"
+                               Name="SessionDialogHost">
+        <materialDesign:DialogHost.DialogContent>
+            <StackPanel Margin="16">
+                <TextBlock Text="Add new live session" />
+                <TextBox Margin="0 8 0 0"
+                         Name="AddLiveSessionNameTextBox"
+                         HorizontalAlignment="Stretch"
+                         materialDesign:HintAssist.Hint="Session name"
+                         materialDesign:HintAssist.IsFloating="True" />
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            IsDefault="True"
+                            Margin="0 8 8 0"
+                            Command="materialDesign:DialogHost.CloseDialogCommand"
+                            Content="Add"
+                            Click="AddSession_Click" />
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            IsCancel="True"
+                            Margin="0 8 8 0"
+                            Command="materialDesign:DialogHost.CloseDialogCommand"
+                            Content="Cancel" />
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:DialogHost.DialogContent>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <ScrollViewer>
+                    <StackPanel Name="SessionsStackPanel"
+                                Margin="0,2.5,0,0" />
+                </ScrollViewer>
+
+                <Grid x:Name="SessionsCoverGridGrid"
+                      Background="White"
+                      Visibility="Hidden"
+                      Grid.RowSpan="2">
+                    <materialDesign:PackIcon Kind="CardsVariant"
+                                                Opacity=".2"
+                                                VerticalAlignment="Stretch"
+                                                HorizontalAlignment="Stretch" />
+                </Grid>
+            </Grid>
+
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}" />
+
+            <Grid Grid.Column="2">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="45" />
+                    </Grid.RowDefinitions>
+
+                    <materialDesign:Card Margin="0,5,0,5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="65" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="80" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Name="SelectedSessionNameTextBox"
+                                         Grid.Column="0"
+                                         VerticalAlignment="Stretch"
+                                         HorizontalAlignment="Stretch"
+                                         VerticalContentAlignment="Center"
+                                         HorizontalContentAlignment="Left"
+                                         materialDesign:HintAssist.Hint="Session name"
+                                         materialDesign:HintAssist.IsFloating="True"
+                                         Margin="5,0,0,15">
+                                    <TextBox.Text>
+                                        <Binding Path="SessionName"
+                                                 UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <validation:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+
+                                <custom:ImageCardButtonWithoutShadow Grid.Column="1"
+                                                                     x:Name="ChangeSelectedSessionNameCardButton"
+                                                                     Margin="5,10"
+                                                                     Kind="ContentSave"
+                                                                     Click="ChangeSelectedSessionNameCardButton_Click" />
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <ScrollViewer Margin="0,0,5,0">
+                                    <TreeView x:Name="SelectedSessionSensorsTreeView" />
+                                </ScrollViewer>
+
+                                <Grid x:Name="SensorsCoverGrid"
+                                      Visibility="Hidden"
+                                      Background="White">
+                                    <materialDesign:PackIcon Kind="ListStatus"
+                                                             Opacity=".1"
+                                                             VerticalAlignment="Stretch"
+                                                             HorizontalAlignment="Stretch" />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </materialDesign:Card>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <custom:ImageCardButton x:Name="ChangeSessionStatusCardButton"
+                                                Grid.Column="0"
+                                                Margin="0,0,2.5,5"
+                                                Click="ChangeSessionStatusCardButton_Click"
+                                                Kind="AccessPoint" />
+
+                        <custom:DeleteCardButton x:Name="DeleteSessionCardButton"
+                                                 Grid.Column="1"
+                                                 Margin="2.5,0,0,5"
+                                                 Click="DeleteSessionCardButton_Click" />
+                    </Grid>
+
+                    <materialDesign:Card x:Name="SessionDataGridCover"
+                                         Margin="0,5"
+                                         Background="White"
+                                         Grid.RowSpan="2"
+                                         Visibility="Hidden">
+                        <materialDesign:PackIcon Kind="CardText"
+                                                 Opacity=".2"
+                                                 VerticalAlignment="Stretch"
+                                                 HorizontalAlignment="Stretch" />
+                    </materialDesign:Card>
+                </Grid>
+            </Grid>
+
+            <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}" />
+
+            <Grid Grid.Column="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:Card Margin="0,5,5,0"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="Connection status"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   Margin="5,0,0,0"
+                                   Grid.Row="0" />
+
+                            <Label Content="Server status"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   Margin="5,0,0,0"
+                                   Grid.Row="1" />
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <materialDesign:PackIcon Kind="Car"
+                                                     Grid.Column="0"
+                                                     VerticalAlignment="Stretch"
+                                                     HorizontalAlignment="Stretch" />
+
+                                <Label Name="CarToDBConnectionSpeedLabel"
+                                   Grid.Column="1"
+                                   Content="-"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+
+                                <materialDesign:PackIcon Kind="Server"
+                                                     Grid.Column="2"
+                                                     VerticalAlignment="Stretch"
+                                                     HorizontalAlignment="Stretch" />
+
+                                <Label Name="DBToAppConnectionSpeedLabel"
+                                   Grid.Column="3"
+                                   Content="-"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+
+                                <materialDesign:PackIcon Kind="Application"
+                                                     Grid.Column="4"
+                                                     VerticalAlignment="Stretch"
+                                                     HorizontalAlignment="Stretch" />
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <materialDesign:PackIcon Name="ServerStatusIcon"
+                                                         VerticalAlignment="Center"
+                                                         Margin="5,0,0,0"
+                                                         Grid.Column="0"
+                                                         RenderTransformOrigin="0.5,0.5"
+                                                         Kind="CloudQuestion"
+                                                         Foreground="{DynamicResource FontColor}"
+                                                         HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
+                                            <SkewTransform />
+                                            <RotateTransform />
+                                            <TranslateTransform />
+                                        </TransformGroup>
+                                    </materialDesign:PackIcon.RenderTransform>
+                                </materialDesign:PackIcon>
+
+                                <ProgressBar Name="ServerStatusProgressBar"
+                                             Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                             IsIndeterminate="True"
+                                             Foreground="{DynamicResource FontColor}"
+                                             Visibility="Hidden"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Center"
+                                             />
+
+                                <custom:ImageCardButtonWithoutShadow Kind="Refresh"
+                                                                     x:Name="RefreshHealthCheck"
+                                                                     Grid.Column="4"
+                                                                     Click="RefreshHealthCheckImageCardButtonWithoutShadow_Click" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}" />
+            </Grid>
+
+            <Button Grid.ColumnSpan="5"
+                    Name="AddLiveSessionButton"
+                    Margin="10"
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                    Style="{StaticResource MaterialDesignFloatingActionButton}"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right">
+                <materialDesign:PackIcon Kind="Add" />
+            </Button>
+
+            <Button Grid.ColumnSpan="5"
+                    Name="RefreshSessionsButton"
+                    Margin="10,10,10,75"
+                    Style="{StaticResource MaterialDesignFloatingActionButton}"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    Background="White"
+                    BorderBrush="White"
+                    Foreground="{DynamicResource FontColor}"
+                    Click="RefreshSessionsButton_Click">
+                <materialDesign:PackIcon Kind="Refresh" />
+            </Button>
+
+            <Grid Grid.ColumnSpan="5"
+                  Name="LoadingGrid"
+                  Background="{DynamicResource FontColor}"
+                  Opacity=".8"
+                  Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Label Name="LoadingLabel"
+                       Content="Loading sessions.."
+                       FontSize="20"
+                       Foreground="#ffffff"
+                       VerticalContentAlignment="Bottom"
+                       HorizontalContentAlignment="Center" />
+                <ProgressBar Grid.Row="1"
+                             Name="LoadingProgressBar"
+                             VerticalAlignment="Top"
+                             Style="{StaticResource MaterialDesignCircularProgressBar}"
+                             IsIndeterminate="True"
+                             RenderTransformOrigin="0.5,0.5"
+                             Foreground="White"
+                             Margin="0,5,0,0">
+                    <ProgressBar.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2" />
+                            <SkewTransform />
+                            <RotateTransform />
+                            <TranslateTransform Y="10" />
+                        </TransformGroup>
+                    </ProgressBar.RenderTransform>
+                </ProgressBar>
+
+                <materialDesign:Card Name="LoadingCancelButtonCard"
+                                     Grid.Row="2"
+                                     Width="100"
+                                     Height="40"
+                                     VerticalAlignment="Top"
+                                     Margin="0,5,0,0"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                     Background="{DynamicResource Delete}">
+
+                    <materialDesign:PackIcon Kind="No"
+                                             VerticalAlignment="Stretch"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalContentAlignment="Center"
+                                             HorizontalContentAlignment="Center"
+                                             Foreground="White" />
+                </materialDesign:Card>
+            </Grid>
+
+            <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}"
+                                     x:Name="ErrorSnackbar"
+                                     Grid.ColumnSpan="5"
+                                     VerticalAlignment="Top"
+                                     Background="{DynamicResource FontColor}" />
+        </Grid>
+    </materialDesign:DialogHost>
+</UserControl>

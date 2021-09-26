@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Web_API</name>
+    </assembly>
+    <members>
+        <member name="M:Web_API.Controllers.TimeController.Get">
+            <summary>
+            Gets the list of the Time channel.
+            </summary>
+            <remarks>
+            Example:
+            
+                [
+                    {
+                        "value": 0.1,
+                        "id": 1
+                    },
+                    {
+                        "value": 2,
+                        "id": 2
+                    },
+                    {
+                        "value": 25,
+                        "id": 3
+                    }
+                ]
+            </remarks>
+            <returns>All Time data.</returns>
+        </member>
+        <member name="M:Web_API.Controllers.TimeController.Get(System.Int32)">
+            <summary>
+            Gets a single Time based on <paramref name="id"/>.
+            </summary>
+            <remarks>
+            Example:
+            
+                {
+                    "value": 2,
+                    "id": 3
+                }
+            </remarks>
+            <param name="id">ID of the value.</param>
+            <returns>A single Time.</returns>
+        </member>
+        <member name="M:Web_API.Controllers.TimeController.Post(System.Single)">
+            <summary>
+            Posts a new value into Times.
+            </summary>
+            <remarks>
+            Example:
+            
+                4.12
+            </remarks>
+            <param name="value">Value of the Time channel.</param>
+            <returns>An Http status code.</returns>
+            <response code="200">Sucessfully added <paramref name="value"/> into values.</response>
+            <response code="500">There was an error adding the <paramref name="value"/> into values.</response>       
+        </member>
+    </members>
+</doc>

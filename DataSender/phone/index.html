@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+  	async	function send(){
+			var number = 1;
+			for (let j = 1 ; j <= 10; j++) {
+				var buffer = [];
+				for (let index = 1; index <= 100; index++) {
+					buffer.push("{'value':" + number + "}");
+					number++;
+				}
+				bufferString = "[";
+				for (let i = 0; i < buffer.length; i++) {
+					bufferString += buffer[i] + ",";
+				}
+				bufferString = bufferString.substring(0, bufferString.length - 2);
+				bufferString += "}]";
+				try {
+					await fetch("http://bricsi.tplinkdns.com:5000/api/YawAngle?values=" + bufferString + "&sectionID=7", { method: 'POST', mode: 'no-cors' });
+				} catch (error) {
+					document.getElementById("content").append(error);
+				}
+				//await fetch("http://192.168.1.33:5000/api/YawAngle?values=" + bufferString + "&sectionID=7", { method: 'POST', mode: 'no-cors' });
+			}
+		}
+	</script>
+</head>
+<body>
+	<button onclick="send()">Send</button>
+	<p id="content"></p>
+</body>
+</html>
