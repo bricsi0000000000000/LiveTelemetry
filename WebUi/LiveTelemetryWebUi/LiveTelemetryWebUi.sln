@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveTelemetryWebUi", "LiveTelemetryWebUi.csproj", "{C8B64B6D-9213-41B5-A814-77D458BEF774}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveTelemetryWebUi", "LiveTelemetryWebUi.csproj", "{1566F65F-1303-4C0A-AE29-C47C4D5057D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C8B64B6D-9213-41B5-A814-77D458BEF774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8B64B6D-9213-41B5-A814-77D458BEF774}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8B64B6D-9213-41B5-A814-77D458BEF774}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8B64B6D-9213-41B5-A814-77D458BEF774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1566F65F-1303-4C0A-AE29-C47C4D5057D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1566F65F-1303-4C0A-AE29-C47C4D5057D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1566F65F-1303-4C0A-AE29-C47C4D5057D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1566F65F-1303-4C0A-AE29-C47C4D5057D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9E5CE8ED-AB4B-4854-A5C0-D9C186C72584}
+		SolutionGuid = {0510EB8C-E3FB-4ED3-82D4-F9420F65B5D2}
 	EndGlobalSection
 EndGlobal
