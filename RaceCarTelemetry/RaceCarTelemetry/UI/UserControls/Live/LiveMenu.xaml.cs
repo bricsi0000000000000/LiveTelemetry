@@ -531,8 +531,8 @@ namespace UI.UserControls.Live
         {
             if (stickDataSlider)
             {
-                stickDataSlider = false;
                 DataSliderStickButton.Toggle(stickDataSlider);
+                stickDataSlider = false;
             }
 
             UpdateRangeSlider();
@@ -566,8 +566,6 @@ namespace UI.UserControls.Live
             stickRangeSliderLowerValue = RangeSlider.LowerValue;
 
             UpdateRangeSlider();
-
-            stickSliderFromHere = false;
         }
 
         private void RangeSliderStickLeftButton_Click(object sender, RoutedEventArgs e)
