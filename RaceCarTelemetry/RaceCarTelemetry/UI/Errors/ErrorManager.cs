@@ -2,27 +2,32 @@
 using MaterialDesignThemes.Wpf;
 using System;
 using System.IO;
+using UI.Extensions;
 using UI.Managers;
 
 namespace UI.Errors
 {
+    public enum MessageType
+    {
+        Error,
+        Info
+    }
+
     public static class ErrorManager
     {
-        /// <param name="className">The name of the class where the message comes</param>
-        /// <param name="errorMessage">This will only be written in log</param>
-        public static void ShowErrorMessage(string message, Snackbar snackbar, string className = "", string errorMessage = "")
+        public static void ShowMessage(string message, Snackbar snackbar, MessageType type, string className = "", string exceptionMessage = "")
         {
-            ShowMessage(message, snackbar, className, isError: true, errorMessage);
-        }
-
-        public static void ShowMessage(string message, Snackbar snackbar, string className = "", bool isError = true, string errorMessage = "")
-        {
-            if (isError)
+            switch (type)
             {
-                WriteLog(message, className, errorMessage);
+                case MessageType.Error:
+                    WriteLog(message, className, exceptionMessage);
+                    snackbar.Background = ColorManager.Error;
+                    break;
+                case MessageType.Info:
+                    snackbar.Background = ColorManager.Secondary.ConvertBrush();
+                    break;
             }
 
-            snackbar.Background = isError ? ColorManager.Error : ColorManager.Message;
             snackbar.MessageQueue.Enqueue(message);
         }
 

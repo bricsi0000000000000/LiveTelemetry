@@ -50,7 +50,7 @@ namespace UI.UserControls.Settings
 
             if (!string.IsNullOrEmpty(errorMessage))
             {
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -166,7 +166,7 @@ namespace UI.UserControls.Settings
                 }
                 else
                 {
-                    ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                    ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
                 }
             }
         }
@@ -175,7 +175,7 @@ namespace UI.UserControls.Settings
         {
             if (string.IsNullOrEmpty(AddGroupNameTextBox.Text) || string.IsNullOrWhiteSpace(AddGroupNameTextBox.Text))
             {
-                ErrorManager.ShowMessage("Name can not be empty", ErrorSnackbar);
+                ErrorManager.ShowMessage("Name can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
@@ -188,7 +188,7 @@ namespace UI.UserControls.Settings
             }
             else
             {
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -208,7 +208,7 @@ namespace UI.UserControls.Settings
             else
             {
                 SelectedGroupNameTextBox.Text = GroupManager.GetGroup(activeGroupId).Name;
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -228,7 +228,7 @@ namespace UI.UserControls.Settings
                     {
                         activeAttributeId = attributes.First().Id;
                     }
-                 
+
                     foreach (GroupAttribute attribute in attributes)
                     {
                         AddAttribute(attribute, withUpdate: false);
@@ -290,7 +290,7 @@ namespace UI.UserControls.Settings
                 }
                 else
                 {
-                    ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                    ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
                 }
             }
         }
@@ -340,14 +340,14 @@ namespace UI.UserControls.Settings
             string attributeName = AddAttributeNameTextBox.Text;
             if (string.IsNullOrEmpty(attributeName) || string.IsNullOrWhiteSpace(attributeName))
             {
-                ErrorManager.ShowMessage("Name can not be empty", ErrorSnackbar);
+                ErrorManager.ShowMessage("Name can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
             string attributeLineWidth = AddAttributeLineWidthTextBox.Text;
             if (string.IsNullOrEmpty(attributeLineWidth) || string.IsNullOrWhiteSpace(attributeLineWidth))
             {
-                ErrorManager.ShowMessage("Line width can not be empty", ErrorSnackbar);
+                ErrorManager.ShowMessage("Line width can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
@@ -355,13 +355,13 @@ namespace UI.UserControls.Settings
             {
                 if (lineWidth <= 0)
                 {
-                    ErrorManager.ShowMessage("Line width must be greater than 0", ErrorSnackbar);
+                    ErrorManager.ShowMessage("Line width must be greater than 0", MessageSnackbar, MessageType.Error);
                     return;
                 }
             }
             else
             {
-                ErrorManager.ShowMessage("Line width must be a number", ErrorSnackbar);
+                ErrorManager.ShowMessage("Line width must be a number", MessageSnackbar, MessageType.Error);
                 return;
             }
 
@@ -376,7 +376,7 @@ namespace UI.UserControls.Settings
             }
             else
             {
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -396,7 +396,7 @@ namespace UI.UserControls.Settings
             else
             {
                 SelectedAttributeNameTextBox.Text = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId).Name;
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -405,7 +405,7 @@ namespace UI.UserControls.Settings
             string attributeLineWidth = SelectedAttributeLineWidthTextBox.Text;
             if (string.IsNullOrEmpty(attributeLineWidth) || string.IsNullOrWhiteSpace(attributeLineWidth))
             {
-                ErrorManager.ShowMessage("Line width can not be empty", ErrorSnackbar);
+                ErrorManager.ShowMessage("Line width can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
@@ -413,13 +413,13 @@ namespace UI.UserControls.Settings
             {
                 if (lineWidth <= 0)
                 {
-                    ErrorManager.ShowMessage("Line width must be greater than 0", ErrorSnackbar);
+                    ErrorManager.ShowMessage("Line width must be greater than 0", MessageSnackbar, MessageType.Error);
                     return;
                 }
             }
             else
             {
-                ErrorManager.ShowMessage("Line width must be a number", ErrorSnackbar);
+                ErrorManager.ShowMessage("Line width must be a number", MessageSnackbar, MessageType.Error);
                 return;
             }
 
@@ -432,7 +432,7 @@ namespace UI.UserControls.Settings
             else
             {
                 SelectedAttributeLineWidthTextBox.Text = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId).LineWidth.ToString();
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -447,7 +447,7 @@ namespace UI.UserControls.Settings
             else
             {
                 SelectedAttributeColorPicker.Color = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId).ColorCode.ConvertColor();
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
     }

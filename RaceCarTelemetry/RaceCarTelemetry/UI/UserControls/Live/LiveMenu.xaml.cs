@@ -157,6 +157,9 @@ namespace UI.UserControls.Live
             selectedGroups.Clear();
             sensorValues.Clear();
 
+            SensorsStackPanel.Children.Clear();
+            GroupsStackPanel.Children.Clear();
+
             activeSession = session;
             IsSelectedSession = session != null;
 
@@ -168,7 +171,7 @@ namespace UI.UserControls.Live
             }
             catch (Exception exception)
             {
-                ErrorManager.ShowErrorMessage("There was an error getting the sensors from the server", ErrorSnackbar, nameof(LiveMenu), errorMessage: exception.Message);
+                ErrorManager.ShowMessage("There was an error getting the sensors from the server", MessageSnackbar, MessageType.Error, className: nameof(LiveMenu), exceptionMessage: exception.Message);
             }
 
             if (session != null)
@@ -285,14 +288,48 @@ namespace UI.UserControls.Live
             }
         }
 
+        private void UpdateSensorNames()
+        {
+            if (activeSession.SensorNames == null || !activeSession.SensorNames.Any())
+            {
+                GetSensorNames();
+            }
+        }
+
+        private async void GetSensorNames()
+        {
+            string apiCall = $"{ConfigurationManager.Configuration.GetApiCall(ApiCallManager.GET_SENSOR_NAMES)}{activeSession.SessionId}";
+
+            try
+            {
+                activeSession.SensorNames = await liveBusinessLogic.GetSensorNames(client, apiCall);
+                UpdateSensorsStackPanel(activeSession.SensorNames);
+            }
+            catch (Exception exception)
+            {
+                ErrorManager.ShowMessage($"There was a problem getting sensors from {activeSession.Name}", MessageSnackbar, type: MessageType.Error, className: nameof(LiveMenu), exceptionMessage: exception.Message);
+            }
+        }
+
         private async void CollectData()
         {
             while (CanUpdateCharts)
             {
+                if (activeSession == null)
+                {
+                    continue;
+                }
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    UpdateSensorNames();
+                });
+
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
 
                 string apiCall;
+                // if lastPackageId is 0 (so it's the first call), then get all package and continue getting from that
                 if (lastPackageId == 0)
                 {
                     apiCall = $"{ConfigurationManager.Configuration.GetApiCall(ApiCallManager.GET_ALL_PACKAGES)}/{activeSession.SessionId}";
@@ -302,7 +339,6 @@ namespace UI.UserControls.Live
                     apiCall = $"{ConfigurationManager.Configuration.GetApiCall(ApiCallManager.GET_PACKAGES_AFTER)}/{lastPackageId}/{activeSession.SessionId}";
                 }
 
-                // if lastPackageId is 0 (so it's the first call), then get all package and continue getting from that
                 try
                 {
                     List<SensorValue> newSensorValues = await liveBusinessLogic.GetPackagesSensorValues(client, apiCall);
@@ -350,7 +386,7 @@ namespace UI.UserControls.Live
                 }
                 catch (Exception exception)
                 {
-                    ErrorManager.ShowErrorMessage("There was a problem getting data from the server", ErrorSnackbar, className: nameof(LiveMenu), errorMessage: exception.Message);
+                    ErrorManager.ShowMessage("There was a problem getting data from the server", MessageSnackbar, MessageType.Error, className: nameof(LiveMenu), exceptionMessage: exception.Message);
                 }
             }
         }
