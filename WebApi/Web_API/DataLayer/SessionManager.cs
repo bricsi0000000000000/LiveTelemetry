@@ -54,28 +54,34 @@ namespace DataLayer
         {
             get
             {
-                try
+                if (ActiveSession != null)
                 {
-                    if (ActiveSession != null)
-                    {
-                        DatabaseContext database = new DatabaseContext();
-                        database.SensorValue.Load();
-                        database.Sensor.Load();
-
-                        List<int> sensorIds = database.SensorValue.ToList().FindAll(x => x.SessionId == ActiveSession.SessionId).Select(x => x.SensorId).ToList();
-                        List<string> sensorNames = database.Sensor.ToList().FindAll(x => sensorIds.Contains(x.SensorId)).Select(x => x.Name).ToList();
-
-                        return sensorNames.ToList();
-                    }
-                    else
-                    {
-                        return default;
-                    }
+                    return GetSessionSensors(ActiveSession.SessionId);
                 }
-                catch (Exception exception)
+                else
                 {
-                    throw exception;
+                    return default;
                 }
+            }
+        }
+
+        public static List<string> GetSessionSensors(int sessionId)
+        {
+            try
+            {
+                DatabaseContext database = new DatabaseContext();
+                database.SensorValue.Load();
+                database.Sensor.Load();
+
+                List<int> sensorIds = database.SensorValue.ToList().FindAll(x => x.SessionId == sessionId).Select(x => x.SensorId).ToList();
+                List<string> sensorNames = database.Sensor.ToList().FindAll(x => sensorIds.Contains(x.SensorId)).Select(x => x.Name).ToList();
+
+                return sensorNames.ToList();
+
+            }
+            catch (Exception exception)
+            {
+                throw exception;
             }
         }
 

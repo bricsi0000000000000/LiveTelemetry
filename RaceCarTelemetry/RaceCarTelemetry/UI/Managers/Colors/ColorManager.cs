@@ -21,5 +21,8 @@ namespace UI.Managers
 
         public static Brush Error => (Brush)Application.Current.Resources["MaterialDesignSnackbarBackground"];
         public static Brush Message => PrimaryButton;
+
+        public static Color FontColor => Secondary;
+        public static Color White => (Color)Application.Current.Resources["White"];
     }
 }

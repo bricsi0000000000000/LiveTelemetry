@@ -19,6 +19,7 @@
         public const string GET_ALL_PACKAGES = "GetAllPackages";
 
         public const string GET_ALL_SENSORS = "GetAllSensors";
+        public const string GET_SENSOR_NAMES = "GetSensorNames";
 
         public const string HTTP_CLIENT_HEADER_TYPE = "application/json";
     }

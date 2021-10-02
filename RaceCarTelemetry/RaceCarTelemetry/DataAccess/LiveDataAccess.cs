@@ -188,5 +188,21 @@ namespace DataAccess
                 throw exception;
             }
         }
+
+        public async Task<List<string>> GetSensorNames(HttpClient client, string apiCall)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(apiCall).ConfigureAwait(false);
+                ConfiguredTaskAwaitable<string> result = response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string resultString = result.GetAwaiter().GetResult();
+
+                return JsonConvert.DeserializeObject<List<string>>(resultString);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }

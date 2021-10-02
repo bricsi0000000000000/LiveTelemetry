@@ -40,6 +40,7 @@ namespace DataAccess
                         new LiveSection { Name = ApiCallManager.GET_PACKAGES_AFTER, Value = configurationJson.live.sections.get_packages_after },
                         new LiveSection { Name = ApiCallManager.GET_ALL_PACKAGES, Value = configurationJson.live.sections.get_all_packages },
                         new LiveSection { Name = ApiCallManager.GET_ALL_SENSORS, Value = configurationJson.live.sections.get_all_sensors },
+                        new LiveSection { Name = ApiCallManager.GET_SENSOR_NAMES, Value = configurationJson.live.sections.get_sensor_names },
                     };
                 }
                 catch (JsonReaderException)

@@ -366,7 +366,7 @@
             </Grid>
 
             <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}"
-                                     x:Name="ErrorSnackbar"
+                                     x:Name="MessageSnackbar"
                                      Grid.ColumnSpan="5"
                                      VerticalAlignment="Top"
                                      Background="{DynamicResource FontColor}" />

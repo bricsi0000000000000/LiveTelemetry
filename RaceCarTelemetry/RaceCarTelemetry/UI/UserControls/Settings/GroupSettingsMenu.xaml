@@ -390,7 +390,7 @@
 
         <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}"
                                  Grid.ColumnSpan="7"
-                                 x:Name="ErrorSnackbar"
+                                 x:Name="MessageSnackbar"
                                  Foreground="White"
                                  />
     </Grid>

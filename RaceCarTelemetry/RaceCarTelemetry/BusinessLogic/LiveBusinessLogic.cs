@@ -116,5 +116,17 @@ namespace BusinessLogic
                 throw exception;
             }
         }
+
+        public async Task<List<string>> GetSensorNames(HttpClient client, string apiCall)
+        {
+            try
+            {
+                return await new LiveDataAccess().GetSensorNames(client, apiCall);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
     }
 }
