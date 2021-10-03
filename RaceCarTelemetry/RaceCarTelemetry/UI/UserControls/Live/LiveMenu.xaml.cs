@@ -153,6 +153,27 @@ namespace UI.UserControls.Live
             BuildCharts();
         }
 
+        public void Update()
+        {
+            List<string> deletableSelectedGroupNames = new List<string>();
+            foreach (string selectedGroupName in selectedGroups)
+            {
+                if (GroupManager.Groups.Find(x => x.Name.Equals(selectedGroupName)) == null)
+                {
+                    deletableSelectedGroupNames.Add(selectedGroupName);
+                }
+            }
+
+            foreach (string deletableSelectedGroupName in deletableSelectedGroupNames)
+            {
+                selectedGroups.Remove(deletableSelectedGroupName);
+            }
+
+            InitializeGroupItems();
+
+            BuildCharts();
+        }
+
         public async void Update(LiveSession session)
         {
             lastPackageId = 0;
@@ -164,7 +185,7 @@ namespace UI.UserControls.Live
             SensorsStackPanel.Children.Clear();
             foreach (object child in GroupsStackPanel.Children)
             {
-                if(child is CheckBox checkbox)
+                if (child is CheckBox checkbox)
                 {
                     checkbox.IsChecked = false;
                 }

@@ -10,16 +10,18 @@ namespace UI.UserControls.Settings
         private static readonly List<TabItem> menuTabs = new List<TabItem>();
 
         private readonly UpdateLiveMenu updateLiveMenu;
+        private readonly UpdateLiveMenuCharts updateLiveMenuCharts;
         private readonly FinishedReadingGroups finishedReadingGroups;
         private readonly FinishedReadingConfiguration finishedReadingConfiguration;
 
         public LiveSettingsMenu LiveSettingsMenu;
 
-        public SettingsMenu(UpdateLiveMenu updateLiveMenu, FinishedReadingGroups finishedReadingGroups, FinishedReadingConfiguration finishedReadingConfiguration)
+        public SettingsMenu(UpdateLiveMenu updateLiveMenu, UpdateLiveMenuCharts updateLiveMenuCharts, FinishedReadingGroups finishedReadingGroups, FinishedReadingConfiguration finishedReadingConfiguration)
         {
             InitializeComponent();
 
             this.updateLiveMenu = updateLiveMenu;
+            this.updateLiveMenuCharts = updateLiveMenuCharts;
             this.finishedReadingGroups = finishedReadingGroups;
             this.finishedReadingConfiguration = finishedReadingConfiguration;
 
@@ -32,7 +34,7 @@ namespace UI.UserControls.Settings
 
             LiveSettingsMenu = new LiveSettingsMenu(updateLiveMenu, finishedReadingConfiguration);
 
-            AddSettingsTab(TextManager.GROUP_SETTINGS_MENU, new GroupSettingsMenu(finishedReadingGroups));
+            AddSettingsTab(TextManager.GROUP_SETTINGS_MENU, new GroupSettingsMenu(finishedReadingGroups, updateLiveMenuCharts));
             AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu, selected: true);
         }
 
