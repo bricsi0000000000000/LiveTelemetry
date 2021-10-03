@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using UI.CustomEventArguments;
@@ -7,6 +8,9 @@ namespace UI.CustomControls
 {
     public partial class RangeSlider : UserControl
     {
+        private double previousUpperValue = 0;
+        private double previousLowerValue = 0;
+
         public RangeSlider()
         {
             InitializeComponent();
@@ -56,8 +60,6 @@ namespace UI.CustomControls
         {
             UpperSlider.Value = Math.Max(UpperSlider.Value, LowerSlider.Value);
 
-            LowerSlider.SelectionEnd = UpperValue;
-
             InvokeValueChanged(RangeSliderSide.Left);
         }
 
@@ -65,19 +67,41 @@ namespace UI.CustomControls
         {
             LowerSlider.Value = Math.Min(UpperSlider.Value, LowerSlider.Value);
 
-            LowerSlider.SelectionStart = LowerValue;
-
             InvokeValueChanged(RangeSliderSide.Right);
         }
 
         private void InvokeValueChanged(RangeSliderSide side)
         {
-            ValueChanged?.Invoke(new RangeSliderEventArgs
+            switch (side)
             {
-                LowerValue = LowerValue,
-                UpperValue = UpperValue,
-                Side = side
-            });
+                case RangeSliderSide.Left:
+                    if (previousLowerValue != LowerValue)
+                    {
+                        ValueChanged?.Invoke(new RangeSliderEventArgs
+                        {
+                            LowerValue = LowerValue,
+                            UpperValue = UpperValue,
+                            Side = side
+                        });
+
+                        previousUpperValue = UpperValue;
+                    }
+                    break;
+                case RangeSliderSide.Right:
+                    if (previousUpperValue != UpperValue)
+                    {
+                        ValueChanged?.Invoke(new RangeSliderEventArgs
+                        {
+                            LowerValue = LowerValue,
+                            UpperValue = UpperValue,
+                            Side = side
+                        });
+
+                        previousUpperValue = UpperValue;
+                    }
+                    break;
+            }
+            
         }
     }
 }

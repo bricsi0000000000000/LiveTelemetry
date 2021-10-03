@@ -24,7 +24,7 @@ namespace UI.Managers
         {
             LiveMenu liveMenu = new LiveMenu();
 
-            updateLiveMenuRangeSlider = new UpdateLiveMenuRangeSlider(liveMenu.UpdateRangeSlider);
+            updateLiveMenuRangeSlider = new UpdateLiveMenuRangeSlider(liveMenu.BuildCharts);
 
             SettingsMenu settingsMenu = new SettingsMenu(new UpdateLiveMenu(liveMenu.Update),
                                                          new FinishedReadingGroups(liveMenu.InitializeGroupItems),
