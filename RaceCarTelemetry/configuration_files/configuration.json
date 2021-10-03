@@ -4,7 +4,7 @@
     "minor_version" : 1
   },
   "live" : {
-    "wait_between_collect_data" : 2000,
+    "wait_between_collect_data" : 3000,
     "isHTTPS" : false,
     "url" : "10.0.0.100",
     "port" : 5000,

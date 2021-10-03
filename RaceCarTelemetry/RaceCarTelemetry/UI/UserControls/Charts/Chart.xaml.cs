@@ -97,32 +97,39 @@ namespace UI.UserControls.Charts
                                 int lineWidth = 1
                                 )
         {
-            if (xAxisValues.Any())
+            try
             {
-                // save the incoming values because based on liveChartValues can the side value be updated
-                int index = values.FindIndex(x => x.Name.Equals(xAxisLabel));
-                if (index == -1)
+                if (xAxisValues.Any())
                 {
-                    values.Add(new ChartValue
+                    // save the incoming values because based on liveChartValues can the side value be updated
+                    int index = values.FindIndex(x => x.Name.Equals(xAxisLabel));
+                    if (index == -1)
                     {
-                        Name = attributeName,
-                        Values = xAxisValues
-                    });
-                }
-                else
-                {
-                    values[index].Values.AddRange(xAxisValues);
-                }
+                        values.Add(new ChartValue
+                        {
+                            Name = attributeName,
+                            Values = xAxisValues
+                        });
+                    }
+                    else
+                    {
+                        values[index].Values.AddRange(xAxisValues);
+                    }
 
-                ScottPlotChart.plt.PlotSignal(ys: xAxisValues.ToArray(),
-                                              color: lineColor,
-                                              lineWidth: lineWidth,
-                                              markerSize: 1,
-                                              minRenderIndex: minRenderIndex,
-                                              maxRenderIndex: maxRenderIndex);
-                ScottPlotChart.plt.XLabel(xAxisLabel, bold: true);
-                ScottPlotChart.plt.Legend();
-                ScottPlotChart.Render();
+                    ScottPlotChart.plt.PlotSignal(ys: xAxisValues.ToArray(),
+                                                  color: lineColor,
+                                                  lineWidth: lineWidth,
+                                                  markerSize: 1,
+                                                  minRenderIndex: minRenderIndex,
+                                                  maxRenderIndex: maxRenderIndex);
+                    ScottPlotChart.plt.XLabel(xAxisLabel, bold: true);
+                    ScottPlotChart.plt.Legend();
+                    ScottPlotChart.Render();
+                }
+            }
+            catch (Exception exception)
+            {
+                throw exception;
             }
         }
 

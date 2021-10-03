@@ -50,7 +50,8 @@ namespace UI.UserControls.Live
         private bool stickRangeSliderLeft;
         private bool stickRangeSliderRight;
         private bool stickDataSlider;
-        private bool stickSliderFromHere;
+        private bool stickDataSliderFromButton;
+        private bool stickRangeSliderFromButton;
         private double stickRangeSliderUpperValue;
         private double stickRangeSliderLowerValue;
 
@@ -73,7 +74,8 @@ namespace UI.UserControls.Live
             stickRangeSliderLeft = true;
             stickRangeSliderRight = true;
             stickDataSlider = true;
-            stickSliderFromHere = false;
+            stickDataSliderFromButton = true;
+            stickRangeSliderFromButton = true;
 
             CanUpdateCharts = false;
             IsSelectedSession = false;
@@ -153,11 +155,20 @@ namespace UI.UserControls.Live
 
         public async void Update(LiveSession session)
         {
+            lastPackageId = 0;
+
             selectedSensors.Clear();
             selectedGroups.Clear();
             sensorValues.Clear();
 
             SensorsStackPanel.Children.Clear();
+            foreach (object child in GroupsStackPanel.Children)
+            {
+                if(child is CheckBox checkbox)
+                {
+                    checkbox.IsChecked = false;
+                }
+            }
 
             activeSession = session;
             IsSelectedSession = session != null;
@@ -387,6 +398,8 @@ namespace UI.UserControls.Live
                 {
                     ErrorManager.ShowMessage("There was a problem getting data from the server", MessageSnackbar, MessageType.Error, className: nameof(LiveMenu), exceptionMessage: exception.Message);
                 }
+
+                stickRangeSliderFromButton = false;
             }
         }
 
@@ -425,26 +438,24 @@ namespace UI.UserControls.Live
 
             if (stickDataSlider)
             {
+                stickDataSliderFromButton = true;
                 DataSlider.Value = DataSlider.Maximum;
             }
 
+            if (stickRangeSliderRight)
+            {
+                stickRangeSliderFromButton = true;
+            }
             StickRangeSlider();
         }
 
         private void StickRangeSlider()
         {
-            stickSliderFromHere = true;
-
             RangeSlider.LowerValue = stickRangeSliderLeft ? RangeSlider.Minimum : stickRangeSliderLowerValue;
             RangeSlider.UpperValue = stickRangeSliderRight ? RangeSlider.Maximum : stickRangeSliderUpperValue;
         }
 
-        public void UpdateRangeSlider()
-        {
-            BuildCharts();
-        }
-
-        private void BuildCharts()
+        public void BuildCharts()
         {
             ChartsGrid.Children.Clear();
             ChartsGrid.RowDefinitions.Clear();
@@ -534,7 +545,14 @@ namespace UI.UserControls.Live
                                 maxRenderIndex = values.Count - 1;
                             }
 
-                            chart.AddLivePlot(values, attribute.ColorCode.ConvertToChartColor(), attribute.Name, minRenderIndex, maxRenderIndex);
+                            try
+                            {
+                                chart.AddLivePlot(values, attribute.ColorCode.ConvertToChartColor(), attribute.Name, minRenderIndex, maxRenderIndex);
+                            }
+                            catch (Exception exception)
+                            {
+                                ErrorManager.ShowMessage("There was a problem. Check the log for more detail", MessageSnackbar, MessageType.Error, className: nameof(LiveMenu), exceptionMessage: exception.Message);
+                            }
                         }
                     }
 
@@ -598,18 +616,23 @@ namespace UI.UserControls.Live
 
         private void DataSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (stickDataSlider)
+            if (!stickDataSliderFromButton)
             {
-                DataSliderStickButton.Toggle(stickDataSlider);
-                stickDataSlider = false;
+                if (stickDataSlider)
+                {
+                    stickDataSlider = false;
+                    DataSliderStickButton.Toggle(stickDataSlider);
+                }
             }
 
-            UpdateRangeSlider();
+            stickDataSliderFromButton = false;
+
+            BuildCharts();
         }
 
         private void RangeSlider_ValueChanged(RangeSliderEventArgs rangeSliderEventArgs)
         {
-            if (!stickSliderFromHere)
+            if (!stickRangeSliderFromButton)
             {
                 switch (rangeSliderEventArgs.Side)
                 {
@@ -631,25 +654,33 @@ namespace UI.UserControls.Live
                 }
             }
 
+            stickRangeSliderFromButton = false;
+
             stickRangeSliderUpperValue = RangeSlider.UpperValue;
             stickRangeSliderLowerValue = RangeSlider.LowerValue;
 
-            UpdateRangeSlider();
+            BuildCharts();
         }
 
         private void RangeSliderStickLeftButton_Click(object sender, RoutedEventArgs e)
         {
-            stickSliderFromHere = true;
             stickRangeSliderLeft = !stickRangeSliderLeft;
             RangeSliderStickLeftButton.Toggle(stickRangeSliderLeft);
+            if (stickRangeSliderLeft)
+            {
+                stickRangeSliderFromButton = true;
+            }
             StickRangeSlider();
         }
 
         private void RangeSliderStickRightButton_Click(object sender, RoutedEventArgs e)
         {
-            stickSliderFromHere = true;
             stickRangeSliderRight = !stickRangeSliderRight;
             RangeSliderStickRightButton.Toggle(stickRangeSliderRight);
+            if (stickRangeSliderRight)
+            {
+                stickRangeSliderFromButton = true;
+            }
             StickRangeSlider();
         }
 
@@ -659,6 +690,7 @@ namespace UI.UserControls.Live
             DataSliderStickButton.Toggle(stickDataSlider);
             if (stickDataSlider)
             {
+                stickDataSliderFromButton = true;
                 DataSlider.Value = DataSlider.Maximum;
             }
         }
