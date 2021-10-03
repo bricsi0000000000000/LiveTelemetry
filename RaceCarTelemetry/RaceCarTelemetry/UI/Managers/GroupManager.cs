@@ -29,7 +29,7 @@ namespace UI.Managers
             return GetGroup(groupId) != null;
         }
 
-        private static bool IsGroupExists(string name)
+        public static bool IsGroupExists(string name)
         {
             return Groups.Find(x => x.Name.Equals(name)) != null;
         }

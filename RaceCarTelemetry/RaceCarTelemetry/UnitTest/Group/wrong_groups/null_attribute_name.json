@@ -1,0 +1,52 @@
+[
+  {  
+    "LastAttributeId": 2,
+    "Id": 0,
+    "Name": "",
+    "Attributes": [
+      {
+        "sensorId": 0,
+        "Id": 0,
+        "GroupId": 0,
+        "Name": ,
+        "ColorCode": "#FFFC0505",
+        "LineWidth": 1,
+        "IsActive": true
+      },
+      {
+        "sensorId": 0,
+        "Id": 1,
+        "GroupId": 0,
+        "Name": "attribute2",
+        "ColorCode": "#FFC07C3D",
+        "LineWidth": 1,
+        "IsActive": true
+      }
+    ]
+  },
+  {
+  "LastAttributeId": 2,
+    "Id": 1,
+    "Name": "group1",
+    "Attributes": [
+      {
+        "sensorId": 0,
+        "Id": 0,
+        "GroupId": 0,
+        "Name": "attribute1",
+        "ColorCode": "#FFFC0505",
+        "LineWidth": 1,
+        "IsActive": true
+      },
+      {
+        "sensorId": 0,
+        "Id": 1,
+        "GroupId": 0,
+        "Name": "attribute2",
+        "ColorCode": "#FFC07C3D",
+        "LineWidth": 1,
+        "IsActive": true
+      }
+    ]
+  }
+]
