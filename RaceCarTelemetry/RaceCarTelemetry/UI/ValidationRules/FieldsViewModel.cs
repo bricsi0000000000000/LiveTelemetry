@@ -23,6 +23,8 @@ namespace UI.ValidationRules
         private string? changeLineWidth;
         private string? sessionName;
         private string? sessionDate;
+        private string? pageTemplateName;
+        private string? addPageTemplateName;
 
         public string? Name
         {
@@ -118,6 +120,18 @@ namespace UI.ValidationRules
         {
             get => sessionName;
             set => this.MutateVerbose(ref sessionName, value, RaisePropertyChanged());
+        }
+
+        public string? PageTemplateName
+        {
+            get => pageTemplateName;
+            set => this.MutateVerbose(ref pageTemplateName, value, RaisePropertyChanged());
+        }
+
+        public string? AddPageTemplateName
+        {
+            get => addPageTemplateName;
+            set => this.MutateVerbose(ref addPageTemplateName, value, RaisePropertyChanged());
         }
 
 

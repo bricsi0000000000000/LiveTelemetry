@@ -39,25 +39,25 @@ namespace UI.UserControls.Settings
 
             GroupManager.LoadGroups(out string errorMessage);
 
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
+            }
+
             finishedReadingGroups();
 
             if (GroupManager.Groups.Any())
             {
                 activeGroupId = GroupManager.Groups.First().Id;
-                InitGroups();
+                InitializeGroups();
             }
             else
             {
                 activeGroupId = -1;
             }
-
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
-            }
         }
 
-        public void InitGroups()
+        public void InitializeGroups()
         {
             GroupsStackPanel.Children.Clear();
 
@@ -67,20 +67,23 @@ namespace UI.UserControls.Settings
             }
 
             Group activeGroup = GroupManager.GetGroup(activeGroupId);
-            SelectedGroupNameTextBox.Text = activeGroup.Name;
-
-            if (activeGroup.Attributes.Any())
+            if (activeGroup != null)
             {
-                activeAttributeId = activeGroup.Attributes.First().Id;
-            }
-            else
-            {
-                activeAttributeId = -1;
-            }
+                SelectedGroupNameTextBox.Text = activeGroup.Name;
 
-            fieldsViewModel.GroupName = activeGroup.Name;
+                if (activeGroup.Attributes.Any())
+                {
+                    activeAttributeId = activeGroup.Attributes.First().Id;
+                }
+                else
+                {
+                    activeAttributeId = -1;
+                }
 
-            UpdateGroups(activeGroupId);
+                fieldsViewModel.GroupName = activeGroup.Name;
+
+                UpdateGroups(activeGroupId);
+            }
         }
 
         private void AddGroup(Group group, bool withUpdate = true)
@@ -210,7 +213,7 @@ namespace UI.UserControls.Settings
 
             if (string.IsNullOrEmpty(errorMessage))
             {
-                InitGroups();
+                InitializeGroups();
                 updateLiveMenuCharts();
             }
             else

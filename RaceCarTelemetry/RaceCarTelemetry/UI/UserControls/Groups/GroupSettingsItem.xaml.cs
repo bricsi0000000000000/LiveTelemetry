@@ -28,11 +28,9 @@ namespace UI.UserControls.Groups
             CardItem.IsSelected = change;
         }
 
-
         private void CardItem_Click(object sender, RoutedEventArgs e)
         {
             changeActiveGroup(Id);
-            //    ((GroupSettings)((SettingsMenu)MenuManager.GetMenuTab(TextManager.SettingsMenuName).Content).GetTab(TextManager.GroupsSettingsName).Content).SelectInputFile();
         }
     }
 }

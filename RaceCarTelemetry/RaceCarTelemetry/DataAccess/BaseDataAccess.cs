@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 
 namespace DataAccess
 {
@@ -25,7 +26,7 @@ namespace DataAccess
         {
             if (!File.Exists(fileName))
             {
-                errorMessage = $"File '{fileName}' not found!";
+                errorMessage = $"File '{fileName.Split('/').Last()}' not found!";
                 return false;
             }
             else
