@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{53233F3D-F8F5-4194-A1FA-5E0DCE446098}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{53233F3D-F8F5-4194-A1FA-5E0DCE446098}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataModel", "DataModel\DataModel.csproj", "{8A948A9A-3640-4948-9D05-4F2416330E1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModel", "DataModel\DataModel.csproj", "{8A948A9A-3640-4948-9D05-4F2416330E1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{372580EC-BDB9-436E-8C31-783D6189FCA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{372580EC-BDB9-436E-8C31-783D6189FCA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{40F2223A-0C46-43CE-B732-5309EAC0B38C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{40F2223A-0C46-43CE-B732-5309EAC0B38C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{FDFFCE44-AE9C-4756-95A0-FB720C437A08}"
+	ProjectSection(ProjectDependencies) = postProject
+		{40F2223A-0C46-43CE-B732-5309EAC0B38C} = {40F2223A-0C46-43CE-B732-5309EAC0B38C}
+		{8A948A9A-3640-4948-9D05-4F2416330E1F} = {8A948A9A-3640-4948-9D05-4F2416330E1F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,10 @@ Global
 		{40F2223A-0C46-43CE-B732-5309EAC0B38C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40F2223A-0C46-43CE-B732-5309EAC0B38C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40F2223A-0C46-43CE-B732-5309EAC0B38C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDFFCE44-AE9C-4756-95A0-FB720C437A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDFFCE44-AE9C-4756-95A0-FB720C437A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDFFCE44-AE9C-4756-95A0-FB720C437A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDFFCE44-AE9C-4756-95A0-FB720C437A08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

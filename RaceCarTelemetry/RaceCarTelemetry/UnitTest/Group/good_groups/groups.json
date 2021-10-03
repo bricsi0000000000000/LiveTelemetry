@@ -1,0 +1,78 @@
+[
+  {
+    "LastAttributeId": 7,
+    "Id": 0,
+    "Name": "Gearbox",
+    "Attributes": [
+      {
+        "sensorId": 0,
+        "Id": 0,
+        "GroupId": 0,
+        "Name": "rev",
+        "ColorCode": "#FFFC0505",
+        "LineWidth": 1,
+        "IsActive": true
+      },
+      {
+        "sensorId": 0,
+        "Id": 1,
+        "GroupId": 0,
+        "Name": "gear",
+        "ColorCode": "#FFFC7C05",
+        "LineWidth": 1,
+        "IsActive": true
+      },
+      {
+        "sensorId": 0,
+        "Id": 2,
+        "GroupId": 0,
+        "Name": "upInput",
+        "ColorCode": "#FFFCE705",
+        "LineWidth": 1,
+        "IsActive": true
+      },
+      {
+        "sensorId": 0,
+        "Id": 3,
+        "GroupId": 0,
+        "Name": "upRqe",
+        "ColorCode": "#FF80FC05",
+        "LineWidth": 1,
+        "IsActive": true
+      },
+      {
+        "sensorId": 0,
+        "Id": 4,
+        "GroupId": 0,
+        "Name": "upGoing",
+        "ColorCode": "#FF05FCF4",
+        "LineWidth": 1,
+        "IsActive": true
+      },
+      {
+        "sensorId": 0,
+        "Id": 5,
+        "GroupId": 0,
+        "Name": "shiftCnt",
+        "ColorCode": "#FF8005FC",
+        "LineWidth": 1,
+        "IsActive": true
+      },
+      {
+        "sensorId": 0,
+        "Id": 6,
+        "GroupId": 0,
+        "Name": "neutral_In",
+        "ColorCode": "#FFFC0505",
+        "LineWidth": 1,
+        "IsActive": true
+      }
+    ]
+  },
+  {
+    "LastAttributeId": 0,
+    "Id": 1,
+    "Name": "EngineBase",
+    "Attributes": []
+  }
+]
