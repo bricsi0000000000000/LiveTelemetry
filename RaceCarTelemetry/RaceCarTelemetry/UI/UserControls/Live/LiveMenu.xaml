@@ -166,7 +166,6 @@
                     x:Name="DataSlider"
                     Margin="5,0"
                     ValueChanged="DataSlider_ValueChanged"
-                    IsSnapToTickEnabled="True"
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource FontColor}" />
 
