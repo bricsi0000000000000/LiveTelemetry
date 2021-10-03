@@ -8,7 +8,6 @@ using DataModel;
 using UI.UserControls.Groups;
 using System.Collections.Generic;
 using UI.Extensions;
-using System.Windows.Media;
 using System.Windows.Input;
 using static UI.Managers.MenuManager;
 
@@ -24,9 +23,13 @@ namespace UI.UserControls.Settings
         public delegate void ChangeActiveGroup(int selectedGroupId);
         public delegate void ChangeActiveAttribute(int selectedAttributeId);
 
-        public GroupSettingsMenu(FinishedReadingGroups finishedReadingGroups)
+        private UpdateLiveMenuCharts updateLiveMenuCharts;
+
+        public GroupSettingsMenu(FinishedReadingGroups finishedReadingGroups, UpdateLiveMenuCharts updateLiveMenuCharts)
         {
             InitializeComponent();
+
+            this.updateLiveMenuCharts = updateLiveMenuCharts;
 
             fieldsViewModel.AddGroupName =
             fieldsViewModel.AddAttributeName =
@@ -90,6 +93,8 @@ namespace UI.UserControls.Settings
                 activeGroupId = group.Id;
                 UpdateGroups(activeGroupId);
             }
+
+            updateLiveMenuCharts();
         }
 
         private void RemoveGroup(int groupId)
@@ -115,6 +120,8 @@ namespace UI.UserControls.Settings
             }
 
             UpdateGroups(activeGroupId);
+
+            updateLiveMenuCharts();
         }
 
         private void UpdateGroups(int selectedGroupId)
@@ -204,6 +211,7 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(errorMessage))
             {
                 InitGroups();
+                updateLiveMenuCharts();
             }
             else
             {
@@ -253,6 +261,8 @@ namespace UI.UserControls.Settings
                 activeAttributeId = attribute.Id;
                 UpdateAttributes(activeAttributeId);
             }
+
+            updateLiveMenuCharts();
         }
 
         private void UpdateAttributes(int selectedAttributeId)
@@ -319,6 +329,7 @@ namespace UI.UserControls.Settings
             }
 
             UpdateAttributes(activeAttributeId);
+            updateLiveMenuCharts();
         }
 
         private void ChangeAddAttriutePopUpState(bool open)
@@ -392,6 +403,7 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(errorMessage))
             {
                 InitAttributes(wasSelectedAttribute: true);
+                updateLiveMenuCharts();
             }
             else
             {
@@ -428,6 +440,7 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(errorMessage))
             {
                 InitAttributes(wasSelectedAttribute: true);
+                updateLiveMenuCharts();
             }
             else
             {
@@ -443,6 +456,7 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(errorMessage))
             {
                 InitAttributes(wasSelectedAttribute: true);
+                updateLiveMenuCharts();
             }
             else
             {

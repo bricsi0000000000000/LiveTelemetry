@@ -13,6 +13,7 @@ namespace UI.Managers
         private static readonly List<TabItem> menuTabs = new List<TabItem>();
 
         public delegate void UpdateLiveMenu(LiveSession session);
+        public delegate void UpdateLiveMenuCharts();
         public delegate void UpdateLiveMenuRangeSlider();
         public delegate void FinishedReadingGroups();
         public delegate void FinishedReadingConfiguration();
@@ -27,6 +28,7 @@ namespace UI.Managers
             updateLiveMenuRangeSlider = new UpdateLiveMenuRangeSlider(liveMenu.BuildCharts);
 
             SettingsMenu settingsMenu = new SettingsMenu(new UpdateLiveMenu(liveMenu.Update),
+                                                         new UpdateLiveMenuCharts(liveMenu.Update),
                                                          new FinishedReadingGroups(liveMenu.InitializeGroupItems),
                                                          new FinishedReadingConfiguration(liveMenu.InitilaizeHttpClient));
             liveMenu.UpdateCarStatus = new UpdateLiveSettingsCarStatus(settingsMenu.LiveSettingsMenu.UpdateCarStatus);
