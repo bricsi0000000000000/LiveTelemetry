@@ -88,11 +88,6 @@ namespace UI.UserControls.Live
             UpdateCoverGridsVisibilities();
 
             liveBusinessLogic = new LiveBusinessLogic();
-
-            if (ConfigurationManager.Configuration != null)
-            {
-                InitilaizeHttpClient();
-            }
         }
 
         private void UpdateCoverGridsVisibilities()
@@ -149,6 +144,11 @@ namespace UI.UserControls.Live
             {
                 selectedGroups.Remove(content);
             }
+
+
+            SetUpSliders();
+
+            BuildCharts();
         }
 
         public async void Update(LiveSession session)
@@ -158,7 +158,6 @@ namespace UI.UserControls.Live
             sensorValues.Clear();
 
             SensorsStackPanel.Children.Clear();
-            GroupsStackPanel.Children.Clear();
 
             activeSession = session;
             IsSelectedSession = session != null;
@@ -393,27 +392,43 @@ namespace UI.UserControls.Live
 
         private void SetUpSliders()
         {
+            List<double> values = new List<double>();
+
             if (selectedSensors.Any())
             {
-                List<double> values = sensorValues.FindAll(x => x.SensorId == sensors.Find(i => i.Name.Equals(selectedSensors.First().Name)).SensorId).Select(x => x.Value).ToList();
-                if (values.Any())
-                {
-                    DataSlider.Maximum =
-                    RangeSlider.Maximum = values.Count;
-                }
-                else
-                {
-                    DataSlider.Maximum =
-                    RangeSlider.Maximum = 0;
-                }
-
-                if (stickDataSlider)
-                {
-                    DataSlider.Value = DataSlider.Maximum;
-                }
-
-                StickRangeSlider();
+                values = sensorValues.FindAll(x => x.SensorId == sensors.Find(i => i.Name.Equals(selectedSensors.First().Name)).SensorId).Select(x => x.Value).ToList();
             }
+            else if (selectedGroups.Any())
+            {
+                foreach (Group group in GroupManager.Groups)
+                {
+                    if (group.Name.Equals(selectedGroups.First()))
+                    {
+                        if (group.Attributes.Any())
+                        {
+                            values = sensorValues.FindAll(x => x.SensorId == sensors.Find(i => i.Name.Equals(group.Attributes.First().Name)).SensorId).Select(x => x.Value).ToList();
+                        }
+                    }
+                }
+            }
+
+            if (values.Any())
+            {
+                DataSlider.Maximum =
+                RangeSlider.Maximum = values.Count;
+            }
+            else
+            {
+                DataSlider.Maximum =
+                RangeSlider.Maximum = 0;
+            }
+
+            if (stickDataSlider)
+            {
+                DataSlider.Value = DataSlider.Maximum;
+            }
+
+            StickRangeSlider();
         }
 
         private void StickRangeSlider()
@@ -501,26 +516,30 @@ namespace UI.UserControls.Live
             {
                 chart.AddAttributeName(attribute.Name);
 
-                int sensorId = sensors.Find(x => x.Name.Equals(attribute.Name)).SensorId;
-
-                List<double> values = sensorValues.FindAll(x => x.SensorId == sensorId).Select(x => x.Value).ToList();
-
-                if (values.Any())
+                Sensor sensor = sensors.Find(x => x.Name.Equals(attribute.Name));
+                if (sensor != null)
                 {
-                    if (RangeSlider.UpperValue > 0)
+                    int sensorId = sensor.SensorId;
+
+                    List<double> values = sensorValues.FindAll(x => x.SensorId == sensorId).Select(x => x.Value).ToList();
+
+                    if (values.Any())
                     {
-                        int minRenderIndex = (int)RangeSlider.LowerValue;
-                        int maxRenderIndex = (int)RangeSlider.UpperValue;
-                        if (maxRenderIndex >= values.Count)
+                        if (RangeSlider.UpperValue > 0)
                         {
-                            maxRenderIndex = values.Count - 1;
+                            int minRenderIndex = (int)RangeSlider.LowerValue;
+                            int maxRenderIndex = (int)RangeSlider.UpperValue;
+                            if (maxRenderIndex >= values.Count)
+                            {
+                                maxRenderIndex = values.Count - 1;
+                            }
+
+                            chart.AddLivePlot(values, attribute.ColorCode.ConvertToChartColor(), attribute.Name, minRenderIndex, maxRenderIndex);
                         }
-
-                        chart.AddLivePlot(values, attribute.ColorCode.ConvertToChartColor(), attribute.Name, minRenderIndex, maxRenderIndex);
                     }
-                }
 
-                chart.AddSideValue(attribute.Name, values, colorCode: attribute.ColorCode, isActive: values.Any());
+                    chart.AddSideValue(attribute.Name, values, colorCode: attribute.ColorCode, isActive: values.Any());
+                }
             }
 
             chart.SetAxisLimitsToAuto();
@@ -536,7 +555,21 @@ namespace UI.UserControls.Live
                 {
                     if (item is Chart chart)
                     {
-                        List<double> values = sensorValues.FindAll(x => x.SensorId == sensors.Find(i => i.Name.Equals(chart.AttributeNames.First())).SensorId).Select(x => x.Value).ToList();
+                        List<double> values = new List<double>();
+                        foreach (SensorValue value in sensorValues)
+                        {
+                            foreach (Sensor sensor in sensors)
+                            {
+                                if (sensor.Name.Equals(chart.AttributeNames.First()))
+                                {
+                                    if (value.SensorId == sensor.SensorId)
+                                    {
+                                        values.Add(value.Value);
+                                    }
+                                }
+                            }
+                        }
+
                         if (values.Any())
                         {
                             if (RangeSlider.UpperValue > 0)

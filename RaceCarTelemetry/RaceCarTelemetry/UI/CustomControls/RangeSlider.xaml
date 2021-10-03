@@ -42,7 +42,7 @@
         </ControlTemplate>
 
     </UserControl.Resources>
-    <Grid VerticalAlignment="Top"
+    <Grid VerticalAlignment="Center"
           Margin="5,0">
         <Border BorderThickness="0,5.5,0,0"
                 BorderBrush="{DynamicResource FontColor}"

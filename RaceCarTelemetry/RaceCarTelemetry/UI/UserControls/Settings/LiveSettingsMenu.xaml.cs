@@ -47,15 +47,15 @@ namespace UI.UserControls.Settings
             sessions = new List<LiveSession>();
             gettingsHealthCheck = false;
 
+            configurationBusinessLogic = new ConfigurationBusinessLogic();
+            liveBusinessLogic = new LiveBusinessLogic();
+
             UpdateCarStatus();
 
             SessionDataGridCover.Visibility = Visibility.Visible;
 
             fieldsViewModel.SessionName = "placeholder";
             DataContext = fieldsViewModel;
-
-            configurationBusinessLogic = new ConfigurationBusinessLogic();
-            liveBusinessLogic = new LiveBusinessLogic();
 
             LoadLiveConfiguration();
 

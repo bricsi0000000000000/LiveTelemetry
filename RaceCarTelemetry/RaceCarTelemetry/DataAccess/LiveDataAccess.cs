@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DataAccess
 {
