@@ -1,4 +1,6 @@
-﻿namespace UI.Extensions
+﻿using System.Collections.Generic;
+
+namespace UI.Extensions
 {
     public static class Extension
 {
@@ -31,6 +33,14 @@
         public static System.Windows.Media.SolidColorBrush ConvertBrush(this System.Windows.Media.Color color)
         {
             return new System.Windows.Media.SolidColorBrush(color);
+        }
+
+
+        public static void Swap<T>(this List<T> list, int indexA, int indexB)
+        {
+            T temporary = list[indexA];
+            list[indexA] = list[indexB];
+            list[indexB] = temporary;
         }
     }
 }
