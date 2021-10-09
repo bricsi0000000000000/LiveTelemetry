@@ -79,7 +79,7 @@ namespace UI.Managers
             }
         }
 
-        private static void SavePageTemplates(out string errorMessage)
+        public static void SavePageTemplates(out string errorMessage)
         {
             pageTemplateBusinessLogic.SavePageTemplates(PageTemplates, out errorMessage);
         }

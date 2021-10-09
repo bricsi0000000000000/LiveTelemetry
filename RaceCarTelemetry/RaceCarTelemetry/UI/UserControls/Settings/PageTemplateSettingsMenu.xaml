@@ -28,8 +28,7 @@
 
             <ScrollViewer Margin="5,5,0,5"
                           VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Auto"
-                          >
+                          HorizontalScrollBarVisibility="Auto">
                 <StackPanel x:Name="PageTemplatesStackPanel"
                             Margin="0,0,0,5"
                             />
@@ -53,6 +52,8 @@
                                          />
             </Grid>
         </Grid>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
 
         <Grid Grid.Column="2">
             <Grid.RowDefinitions>
@@ -113,29 +114,28 @@
                           HorizontalScrollBarVisibility="Auto"
                           >
                 <StackPanel x:Name="GroupsStackPanel"
-                            Margin="0,0,0,5"
+                            Margin="5,0,0,5"
                             />
             </ScrollViewer>
 
             <Grid Grid.Row="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <custom:ImageCardButton Grid.Column="0"
-                                        Margin="5,5,2.5,5"
+                <custom:ImageCardButton Margin="5,5,2.5,5"
                                         x:Name="AddSensorNameCardButton"
                                         Click="AddSensorNameCardButton_Click"
                                         Kind="PlaylistAdd"
                                         />
-
-                <custom:DeleteCardButton Grid.Column="1"
-                                         Margin="2.5,5,5,5"
-                                         x:Name="DeleteSensorNameCardButton"
-                                         Click="DeleteSensorNameCardButton_Click"
-                                         />
             </Grid>
+        </Grid>
+
+        <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
+
+        <Grid Grid.Column="4">
+            <ScrollViewer Margin="0,5,5,5"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto">
+                <StackPanel x:Name="ChartsStackPanel"
+                            Margin="0,0,0,5"/>
+            </ScrollViewer>
         </Grid>
 
         <Grid Name="PopUpBackground"
@@ -193,6 +193,60 @@
                                                       x:Name="CancelAddPageTemplateCardButton"
                                                       Kind="Cancel"
                                                       Click="CancelAddPageTemplateCardButton_Click"/>
+                    </Grid>
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
+
+        <Grid Name="AddSensorGrid"
+              Grid.ColumnSpan="5"
+              Visibility="Hidden"
+              >
+            <materialDesign:Card Width="200"
+                                 Height="140"
+                                 materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                 >
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="45"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBox Name="AddSensorNameTextBox"
+                             VerticalAlignment="Stretch"
+                             HorizontalAlignment="Stretch"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Left"
+                             materialDesign:HintAssist.Hint="Sensor name"
+                             materialDesign:HintAssist.IsFloating="True"
+                             Margin="5,0,0,15"
+                             >
+                        <TextBox.Text>
+                            <Binding Path="AddSensorName"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <validation:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <custom:ImageCardButtonWithoutShadow Margin="5"
+                                                             x:Name="AddSensorPopUpCardButton"
+                                                             Kind="GroupAddOutline"
+                                                             Click="AddSensorPopUpCardButton_Click"/>
+
+                        <custom:PopUpDeleteCardButton Grid.Column="1"
+                                                      Margin="5"
+                                                      x:Name="CancelAddSensorCardButton"
+                                                      Kind="Cancel"
+                                                      Click="CancelAddSensorCardButton_Click"/>
                     </Grid>
                 </Grid>
             </materialDesign:Card>

@@ -183,13 +183,14 @@ namespace UI.UserControls.Settings
 
         private void AddGroupPopUpCardButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(AddGroupNameTextBox.Text) || string.IsNullOrWhiteSpace(AddGroupNameTextBox.Text))
+            string name = AddGroupNameTextBox.Text;
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
                 ErrorManager.ShowMessage("Name can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
-            Group group = new Group(GroupManager.LastGroupId++, AddGroupNameTextBox.Text);
+            Group group = new Group(GroupManager.LastGroupId++, name);
             ChangeAddGroupPopUpState(open: false);
             GroupManager.AddGroup(group, out string errorMessage);
             if (string.IsNullOrEmpty(errorMessage))

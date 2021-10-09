@@ -25,6 +25,7 @@ namespace UI.ValidationRules
         private string? sessionDate;
         private string? pageTemplateName;
         private string? addPageTemplateName;
+        private string? addSensorName;
 
         public string? Name
         {
@@ -132,6 +133,12 @@ namespace UI.ValidationRules
         {
             get => addPageTemplateName;
             set => this.MutateVerbose(ref addPageTemplateName, value, RaisePropertyChanged());
+        }
+
+        public string? AddSensorName
+        {
+            get => addSensorName;
+            set => this.MutateVerbose(ref addSensorName, value, RaisePropertyChanged());
         }
 
 

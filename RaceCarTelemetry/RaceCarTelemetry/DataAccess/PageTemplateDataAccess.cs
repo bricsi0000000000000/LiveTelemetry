@@ -35,33 +35,33 @@ namespace DataAccess
                             continue;
                         }
 
-                        if (templatesJson[templateIndex].SensorNames == null)
-                        {
-                            errorMessage = "Can't add page template, because 'sensor names' are null!";
-                            continue;
-                        }
-                        else if (templatesJson[templateIndex].GroupNames == null)
-                        {
-                            errorMessage = "Can't add page template, because 'group names' are null!";
-                            continue;
-                        }
-                        else
-                        {
-                            PageTemplate template = new PageTemplate(lastPageTemplateId++, templatesJson[templateIndex].Name.ToString());
+                        PageTemplate template = new PageTemplate(lastPageTemplateId++, templatesJson[templateIndex].Name.ToString());
 
+                        if (templatesJson[templateIndex].SensorNames != null)
+                        {
                             for (int sensorNameIndex = 0; sensorNameIndex < templatesJson[templateIndex].SensorNames.Count; sensorNameIndex++)
                             {
-                                template.SensorNames.Add(templatesJson[templateIndex].SensorNames[sensorNameIndex]);
+                                template.SensorNames.Add(templatesJson[templateIndex].SensorNames[sensorNameIndex].ToString());
                             }
-
-                            for (int groupNameIndex = 0; groupNameIndex < templatesJson[templateIndex].GroupNames.Count; groupNameIndex++)
-                            {
-                                template.GroupNames.Add(templatesJson[templateIndex].GroupNames[groupNameIndex]);
-                            }
-
-                            templates.Add(template);
                         }
 
+                        if (templatesJson[templateIndex].GroupNames != null)
+                        {
+                            for (int groupNameIndex = 0; groupNameIndex < templatesJson[templateIndex].GroupNames.Count; groupNameIndex++)
+                            {
+                                template.GroupNames.Add(templatesJson[templateIndex].GroupNames[groupNameIndex].ToString());
+                            }
+                        }
+
+                        if (templatesJson[templateIndex].Charts != null)
+                        {
+                            for (int chartIndex = 0; chartIndex < templatesJson[templateIndex].Charts.Count; chartIndex++)
+                            {
+                                template.Charts.Add(new PageTemplateChart { Name = templatesJson[templateIndex].Charts[chartIndex].Name, Index = templatesJson[templateIndex].Charts[chartIndex].Index });
+                            }
+                        }
+
+                        templates.Add(template);
                     }
                 }
                 catch (JsonReaderException)
