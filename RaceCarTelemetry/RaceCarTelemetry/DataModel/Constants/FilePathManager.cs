@@ -27,5 +27,13 @@ namespace DataModel.Constants
                 return TextManager.GROUPS_FILE.MakePath(TextManager.DEFAULT_FILES_FOLDER);
             }
         }
+
+        public static string PageTemplateFilePath
+        {
+            get
+            {
+                return TextManager.PAGE_TEMPLATES_FILE.MakePath(TextManager.DEFAULT_FILES_FOLDER);
+            }
+        }
     }
 }

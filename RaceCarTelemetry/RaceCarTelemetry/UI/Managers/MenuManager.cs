@@ -17,6 +17,7 @@ namespace UI.Managers
         public delegate void UpdateLiveMenuRangeSlider();
         public delegate void FinishedReadingGroups();
         public delegate void FinishedReadingConfiguration();
+        public delegate void FinishedReadingPageTemplates();
         public delegate void UpdateLiveSettingsCarStatus(TimeSpan? sentTime = null, long? arrivedTime = null);
 
         public static UpdateLiveMenuRangeSlider updateLiveMenuRangeSlider;
@@ -30,7 +31,8 @@ namespace UI.Managers
             SettingsMenu settingsMenu = new SettingsMenu(new UpdateLiveMenu(liveMenu.Update),
                                                          new UpdateLiveMenuCharts(liveMenu.Update),
                                                          new FinishedReadingGroups(liveMenu.InitializeGroupItems),
-                                                         new FinishedReadingConfiguration(liveMenu.InitilaizeHttpClient));
+                                                         new FinishedReadingConfiguration(liveMenu.InitilaizeHttpClient),
+                                                         new FinishedReadingPageTemplates(liveMenu.InitializePageTemplates));
             liveMenu.UpdateCarStatus = new UpdateLiveSettingsCarStatus(settingsMenu.LiveSettingsMenu.UpdateCarStatus);
 
             AddMenuTab(TextManager.SETTINGS_MENU, settingsMenu, tabControl, selected: true);

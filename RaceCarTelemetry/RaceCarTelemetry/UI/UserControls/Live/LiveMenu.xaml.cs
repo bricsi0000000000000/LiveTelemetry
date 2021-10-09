@@ -41,11 +41,15 @@ namespace UI.UserControls.Live
 
         private const int NO_OPACITY = 1;
         private const float LITTLE_OPACITY = .2f;
+        private const int DEFAULT_CHART_LINE_WIDTH = 1;
+        private const int DEFAULT_CHART_HEIGHT = 200;
+        private const int DEFAULT_CHART_SPLITTER_HEIGHT = 5;
 
         private List<SensorValue> sensorValues;
         private List<Sensor> sensors;
         private LiveSession activeSession;
         private int lastPackageId;
+        private int selectedPageTemplateId;
         private bool gettingData;
         private bool stickRangeSliderLeft;
         private bool stickRangeSliderRight;
@@ -70,6 +74,7 @@ namespace UI.UserControls.Live
             getDataLock = new object();
 
             lastPackageId = 0;
+            selectedPageTemplateId = -1;
             gettingData = false;
             stickRangeSliderLeft = true;
             stickRangeSliderRight = true;
@@ -90,6 +95,16 @@ namespace UI.UserControls.Live
             UpdateCoverGridsVisibilities();
 
             liveBusinessLogic = new LiveBusinessLogic();
+        }
+
+        public void InitializePageTemplates()
+        {
+            PageTemplatesComboBox.Items.Clear();
+
+            foreach (PageTemplate template in PageTemplateManager.PageTemplates)
+            {
+                PageTemplatesComboBox.Items.Add(template.Name);
+            }
         }
 
         private void UpdateCoverGridsVisibilities()
@@ -481,22 +496,54 @@ namespace UI.UserControls.Live
             ChartsGrid.Children.Clear();
             ChartsGrid.RowDefinitions.Clear();
 
+            List<Group> groupsAndSensors = new List<Group>();
+
             int rowIndex = 0;
             foreach (SelectedSensor sensor in selectedSensors) // basic single chart
             {
                 Group group = new Group(GroupManager.LastGroupId++, sensor.Name);
 
-                group.AddAttribute(sensor.Name, sensor.ColorCode, 1);
+                group.AddAttribute(sensor.Name, sensor.ColorCode, DEFAULT_CHART_LINE_WIDTH);
 
-                BuildChartGrid(group, ref rowIndex);
+                groupsAndSensors.Add(group);
             }
 
             foreach (Group group in GroupManager.Groups)
             {
                 if (selectedGroups.Contains(group.Name))
                 {
-                    BuildChartGrid(group, ref rowIndex);
+                    groupsAndSensors.Add(group);
                 }
+            }
+
+            if (selectedPageTemplateId != -1)
+            {
+                List<Group> sortedGroupsAndSensors = new List<Group>();
+
+                PageTemplate selectedTemplate = PageTemplateManager.GetPageTemplate(selectedPageTemplateId);
+                foreach (PageTemplateChart chartItem in selectedTemplate.Charts)
+                {
+                    Group group = groupsAndSensors.Find(x => x.Name == chartItem.Name);
+                    if (group != null)
+                    {
+                        sortedGroupsAndSensors.Add(group);
+                    }
+                }
+
+                foreach (Group group in groupsAndSensors)
+                {
+                    if (sortedGroupsAndSensors.Find(x => x.Name == group.Name) == null)
+                    {
+                        sortedGroupsAndSensors.Add(group);
+                    }
+                }
+
+                groupsAndSensors = new List<Group>(sortedGroupsAndSensors);
+            }
+
+            foreach (Group group in groupsAndSensors)
+            {
+                BuildChartGrid(group, ref rowIndex);
             }
 
             RowDefinition chartRow = new RowDefinition()
@@ -515,11 +562,11 @@ namespace UI.UserControls.Live
         {
             RowDefinition chartRow = new RowDefinition()
             {
-                Height = new GridLength(200)
+                Height = new GridLength(DEFAULT_CHART_HEIGHT)
             };
             RowDefinition gridSplitterRow = new RowDefinition
             {
-                Height = new GridLength(5)
+                Height = new GridLength(DEFAULT_CHART_SPLITTER_HEIGHT)
             };
 
             ChartsGrid.RowDefinitions.Add(chartRow);
@@ -529,18 +576,18 @@ namespace UI.UserControls.Live
             {
                 ResizeDirection = GridResizeDirection.Rows,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                //Background = ColorManager.Secondary100.ConvertBrush()
+                Background = ColorManager.SplitterColor
             };
             ChartsGrid.Children.Add(splitter);
 
-            Chart chart = BuildGroupChart(group);
+            Chart chart = MakeChart(group);
             ChartsGrid.Children.Add(chart);
 
             Grid.SetRow(chart, rowIndex++);
             Grid.SetRow(splitter, rowIndex++);
         }
 
-        private Chart BuildGroupChart(Group group)
+        private Chart MakeChart(Group group)
         {
             Chart chart = new Chart(group.Name);
 
@@ -714,6 +761,30 @@ namespace UI.UserControls.Live
                 stickDataSliderFromButton = true;
                 DataSlider.Value = DataSlider.Maximum;
             }
+        }
+
+        private void PageTemplatesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PageTemplate selectedTemplate = PageTemplateManager.GetPageTemplate(PageTemplatesComboBox.SelectedItem.ToString());
+            selectedPageTemplateId = selectedTemplate.Id;
+
+            foreach (object item in SensorsStackPanel.Children)
+            {
+                if (item is CheckBox checkBox)
+                {
+                    checkBox.IsChecked = selectedTemplate.SensorNames.Contains(checkBox.Content.ToString());
+                }
+            }
+
+            foreach (object item in GroupsStackPanel.Children)
+            {
+                if (item is CheckBox checkBox)
+                {
+                    checkBox.IsChecked = selectedTemplate.GroupNames.Contains(checkBox.Content.ToString());
+                }
+            }
+
+            BuildCharts();
         }
     }
 }

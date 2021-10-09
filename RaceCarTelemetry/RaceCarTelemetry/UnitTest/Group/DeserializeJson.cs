@@ -27,12 +27,10 @@ namespace UnitTest.Group
         [TestCase(WRONG_GROUPS_PATH + "missing_curly_bracket.json")]
         [TestCase(WRONG_GROUPS_PATH + "empty_name.json")]
         [TestCase(WRONG_GROUPS_PATH + "null_name.json")]
-        [TestCase(WRONG_GROUPS_PATH + "null_customizable.json")]
-        [TestCase(WRONG_GROUPS_PATH + "null_driverless.json")]
         [TestCase(WRONG_GROUPS_PATH + "null_attribute_name.json")]
         [TestCase(WRONG_GROUPS_PATH + "null_attribute_color.json")]
         [TestCase(WRONG_GROUPS_PATH + "empty.json")]
-        public void DeserializeJson_MissingCurlyBrackets(string fileName)
+        public void DeserializeJson_Missing(string fileName)
         {
             _ = new GroupBusinessLogic().LoadGroups(fileName, out string errorMessage, ref GroupManager.LastGroupId, out GroupManager.TemporaryGroupIndex);
             Assert.IsFalse(string.IsNullOrEmpty(errorMessage));

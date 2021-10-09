@@ -13,10 +13,11 @@ namespace UI.UserControls.Settings
         private readonly UpdateLiveMenuCharts updateLiveMenuCharts;
         private readonly FinishedReadingGroups finishedReadingGroups;
         private readonly FinishedReadingConfiguration finishedReadingConfiguration;
+        private readonly FinishedReadingPageTemplates finishedReadingPageTemplates;
 
         public LiveSettingsMenu LiveSettingsMenu;
 
-        public SettingsMenu(UpdateLiveMenu updateLiveMenu, UpdateLiveMenuCharts updateLiveMenuCharts, FinishedReadingGroups finishedReadingGroups, FinishedReadingConfiguration finishedReadingConfiguration)
+        public SettingsMenu(UpdateLiveMenu updateLiveMenu, UpdateLiveMenuCharts updateLiveMenuCharts, FinishedReadingGroups finishedReadingGroups, FinishedReadingConfiguration finishedReadingConfiguration, FinishedReadingPageTemplates finishedReadingPageTemplates)
         {
             InitializeComponent();
 
@@ -24,6 +25,7 @@ namespace UI.UserControls.Settings
             this.updateLiveMenuCharts = updateLiveMenuCharts;
             this.finishedReadingGroups = finishedReadingGroups;
             this.finishedReadingConfiguration = finishedReadingConfiguration;
+            this.finishedReadingPageTemplates = finishedReadingPageTemplates;
 
             InitSettingsTabs();
         }
@@ -34,8 +36,9 @@ namespace UI.UserControls.Settings
 
             LiveSettingsMenu = new LiveSettingsMenu(updateLiveMenu, finishedReadingConfiguration);
 
+            AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu);
             AddSettingsTab(TextManager.GROUP_SETTINGS_MENU, new GroupSettingsMenu(finishedReadingGroups, updateLiveMenuCharts));
-            AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu, selected: true);
+            AddSettingsTab(TextManager.PAGE_TEMPLATES_SETTINGS_MENU, new PageTemplateSettingsMenu(finishedReadingPageTemplates, updateLiveMenuCharts), selected: true);
         }
 
         private void AddSettingsTab(string header, UserControl content, bool selected = false)

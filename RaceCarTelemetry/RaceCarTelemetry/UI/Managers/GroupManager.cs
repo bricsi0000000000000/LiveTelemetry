@@ -24,6 +24,11 @@ namespace UI.Managers
             return Groups.Find(x => x.Id == id);
         }
 
+        public static Group GetGroup(string name)
+        {
+            return Groups.Find(x => x.Name.Equals(name));
+        }
+
         private static bool IsGroupExists(int groupId)
         {
             return GetGroup(groupId) != null;
