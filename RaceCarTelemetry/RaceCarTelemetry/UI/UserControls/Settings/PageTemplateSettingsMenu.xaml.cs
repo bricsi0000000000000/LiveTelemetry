@@ -1,12 +1,10 @@
 ﻿using DataModel;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using UI.Errors;
 using UI.Managers;
-using UI.UserControls.Charts;
 using UI.UserControls.PageTemplates;
 using UI.ValidationRules;
 using UI.Extensions;
