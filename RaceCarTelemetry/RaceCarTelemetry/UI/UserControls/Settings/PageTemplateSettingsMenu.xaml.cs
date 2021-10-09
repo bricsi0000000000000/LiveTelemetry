@@ -10,6 +10,7 @@ using UI.UserControls.Charts;
 using UI.UserControls.PageTemplates;
 using UI.ValidationRules;
 using UI.Extensions;
+using static UI.Managers.MenuManager;
 
 namespace UI.UserControls.Settings
 {
@@ -26,9 +27,13 @@ namespace UI.UserControls.Settings
 
         private bool canUpdateCharts = false;
 
-        public PageTemplateSettingsMenu()
+        private UpdateLiveMenuCharts updateLiveMenuCharts;
+
+        public PageTemplateSettingsMenu(FinishedReadingPageTemplates finishedReadingPageTemplates, UpdateLiveMenuCharts updateLiveMenuCharts)
         {
             InitializeComponent();
+
+            this.updateLiveMenuCharts = updateLiveMenuCharts;
 
             DataContext = fieldsViewModel;
 
@@ -72,6 +77,8 @@ namespace UI.UserControls.Settings
             canUpdateCharts = true;
 
             InitializeCharts();
+
+            finishedReadingPageTemplates();
         }
 
         private void InitializeCharts()
@@ -189,6 +196,8 @@ namespace UI.UserControls.Settings
             }
 
             Save();
+
+            updateLiveMenuCharts();
         }
 
         private void InitializePageTemplates()
@@ -222,7 +231,7 @@ namespace UI.UserControls.Settings
                 UpdatePageTemplates(activeTemplateId);
             }
 
-            // updateLiveMenuCharts();
+            updateLiveMenuCharts();
         }
 
         private void UpdatePageTemplates(int selectedTemplateId)

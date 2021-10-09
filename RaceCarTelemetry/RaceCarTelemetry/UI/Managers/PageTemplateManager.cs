@@ -23,6 +23,11 @@ namespace UI.Managers
             return PageTemplates.Find(x => x.Id == id);
         }
 
+        public static PageTemplate GetPageTemplate(string name)
+        {
+            return PageTemplates.Find(x => x.Name == name);
+        }
+
         private static bool IsPageTemplateExists(int id)
         {
             return GetPageTemplate(id) != null;

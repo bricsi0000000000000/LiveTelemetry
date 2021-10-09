@@ -15,6 +15,7 @@ namespace UI.Managers
 
         public static Brush SelectedBackground => (Brush)Application.Current.Resources["SelectedBackground"];
         public static Brush NotSelectedBackground => (Brush)Application.Current.Resources["NotSelectedBackground"];
+        public static Brush SplitterColor => (Brush)Application.Current.Resources["GridSplitter"];
 
         public static Color SelectedForeground => (Color)Application.Current.Resources["Primary"];
         public static Color NotSelectedForeground => Secondary;
