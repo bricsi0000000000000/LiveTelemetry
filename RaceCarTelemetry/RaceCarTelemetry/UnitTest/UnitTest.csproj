@@ -16,8 +16,4 @@
     <ProjectReference Include="..\UI\UI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="TestResults\" />
-  </ItemGroup>
-
 </Project>

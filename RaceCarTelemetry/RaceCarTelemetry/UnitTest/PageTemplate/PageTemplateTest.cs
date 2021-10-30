@@ -8,7 +8,7 @@ namespace UnitTest.PageTemplate
     {
         private const string GOOD_PAGE_TEMPLATES_PATH = "../../../PageTemplate/good_page_templates/";
         private const string WRONG_PAGE_TEMPLATES_PATH = "../../../PageTemplate/wrong_page_templates/";
-        private const string TEST_RESULT_LOG_PATH = "../../../TestResults/test_results.txt";
+        private const string TEST_RESULT_LOG_PATH = "../../../test_results.txt";
 
 
         [TearDown]
