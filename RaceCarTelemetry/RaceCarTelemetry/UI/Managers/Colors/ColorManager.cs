@@ -25,5 +25,6 @@ namespace UI.Managers
 
         public static Color FontColor => Secondary;
         public static Color White => (Color)Application.Current.Resources["White"];
+        public static Color Gray => (Color)Application.Current.Resources["Gray"];
     }
 }

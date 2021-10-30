@@ -35,6 +35,7 @@
     <Color x:Key="White">#ffffff</Color>
     <Color x:Key="WhiteOver">#fafafa</Color>
     <Color x:Key="WhitePressed">#f5f5f5</Color>
+    <Color x:Key="Gray">#e5e5e5</Color>
 
     <SolidColorBrush x:Key="ValidationErrorBrush" Color="{StaticResource AccentDarker}" po:Freeze="True" />
 
