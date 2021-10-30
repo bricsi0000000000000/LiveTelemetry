@@ -16,8 +16,13 @@ namespace UI.UserControls.Settings
         private readonly FinishedReadingPageTemplates finishedReadingPageTemplates;
 
         public LiveSettingsMenu LiveSettingsMenu;
+        public GroupSettingsMenu GroupSettingsMenu;
 
-        public SettingsMenu(UpdateLiveMenu updateLiveMenu, UpdateLiveMenuCharts updateLiveMenuCharts, FinishedReadingGroups finishedReadingGroups, FinishedReadingConfiguration finishedReadingConfiguration, FinishedReadingPageTemplates finishedReadingPageTemplates)
+        public SettingsMenu(UpdateLiveMenu updateLiveMenu,
+                            UpdateLiveMenuCharts updateLiveMenuCharts,
+                            FinishedReadingGroups finishedReadingGroups,
+                            FinishedReadingConfiguration finishedReadingConfiguration,
+                            FinishedReadingPageTemplates finishedReadingPageTemplates)
         {
             InitializeComponent();
 
@@ -35,9 +40,10 @@ namespace UI.UserControls.Settings
             settingsTabControl.Items.Clear();
 
             LiveSettingsMenu = new LiveSettingsMenu(updateLiveMenu, finishedReadingConfiguration);
+            GroupSettingsMenu = new GroupSettingsMenu(finishedReadingGroups, updateLiveMenuCharts);
 
             AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu);
-            AddSettingsTab(TextManager.GROUP_SETTINGS_MENU, new GroupSettingsMenu(finishedReadingGroups, updateLiveMenuCharts));
+            AddSettingsTab(TextManager.GROUP_SETTINGS_MENU, GroupSettingsMenu);
             AddSettingsTab(TextManager.PAGE_TEMPLATES_SETTINGS_MENU, new PageTemplateSettingsMenu(finishedReadingPageTemplates, updateLiveMenuCharts), selected: true);
         }
 

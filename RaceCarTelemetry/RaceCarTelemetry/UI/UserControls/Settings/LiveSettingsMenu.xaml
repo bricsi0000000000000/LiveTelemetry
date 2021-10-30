@@ -274,8 +274,7 @@
                                              Foreground="{DynamicResource FontColor}"
                                              Visibility="Hidden"
                                              VerticalAlignment="Center"
-                                             HorizontalAlignment="Center"
-                                             />
+                                             HorizontalAlignment="Center" />
 
                                 <custom:ImageCardButtonWithoutShadow Kind="Refresh"
                                                                      x:Name="RefreshHealthCheck"
@@ -362,6 +361,47 @@
                                              VerticalContentAlignment="Center"
                                              HorizontalContentAlignment="Center"
                                              Foreground="White" />
+                </materialDesign:Card>
+            </Grid>
+
+            <Grid Grid.ColumnSpan="5"
+                  Name="PopupGrid"
+                  Background="{DynamicResource FontColor}"
+                  Opacity=".8"
+                  Visibility="Hidden">
+                <materialDesign:Card Width="200"
+                                 Height="110"
+                                 UniformCornerRadius="5"
+                                 materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="45" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="You are in an active session.
+                                   Are you sure to change it to offline?"
+                                   TextWrapping="Wrap"
+                                   HorizontalAlignment="Center"/>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <custom:ImageCardButtonWithoutShadow Margin="5"
+                                                             x:Name="ConfirmPopUpCardButton"
+                                                             Kind="Check"
+                                                             Click="ConfirmPopUpCardButton_Click" />
+
+                            <custom:PopUpDeleteCardButton Grid.Column="1"
+                                                      Margin="5"
+                                                      x:Name="CancelPopUpCardButton"
+                                                      Kind="Cancel"
+                                                      Click="CancelPopUpCardButton_Click" />
+                        </Grid>
+                    </Grid>
                 </materialDesign:Card>
             </Grid>
 

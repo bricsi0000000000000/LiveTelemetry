@@ -160,5 +160,16 @@ namespace UI.Managers
         {
             groupBusinessLogic.SaveGroups(Groups, out errorMessage);
         }
+
+        public static Group MakeGroupWithAttributes(string chartName, List<string> sensorNames)
+        {
+            Group newGroup = new Group(LastGroupId++, chartName);
+            foreach (string name in sensorNames)
+            {
+                newGroup.AddAttribute(name, ColorManager.GetChartColor.ToString(), 1);
+            }
+
+            return newGroup;
+        }
     }
 }

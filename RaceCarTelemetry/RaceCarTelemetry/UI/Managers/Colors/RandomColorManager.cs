@@ -34,7 +34,7 @@ namespace UI.Managers
             }
         }
 
-        public static Color GetGetChartColor
+        public static Color GetChartColor
         {
             get
             {

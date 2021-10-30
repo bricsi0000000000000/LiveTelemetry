@@ -60,6 +60,7 @@ namespace UI.UserControls.Live
         private double stickRangeSliderLowerValue;
 
         public UpdateLiveSettingsCarStatus UpdateCarStatus { get; set; }
+        public InitializeGroups InitGroups { get; set; }
         public bool CanUpdateCharts { get; private set; }
         public bool IsSelectedSession { get; set; }
 
@@ -137,7 +138,8 @@ namespace UI.UserControls.Live
             {
                 CheckBox checkBox = new CheckBox()
                 {
-                    Content = group.Name
+                    Content = group.Name,
+                    Foreground = group.Attributes.Any() ? ColorManager.FontColor.ConvertBrush() : ColorManager.Gray.ConvertBrush()
                 };
 
                 checkBox.IsChecked = selectedGroups.Contains(group.Name);
@@ -274,11 +276,45 @@ namespace UI.UserControls.Live
                     };
                     checkBox.Checked += SensorCheckBox_Checked;
                     checkBox.Unchecked += SensorCheckBox_Checked;
+                    checkBox.PreviewMouseRightButtonDown += SensorCheckBox_PreviewMouseRightButtonDown;
+                    checkBox.MouseEnter += CheckBox_MouseEnter;
+                    checkBox.MouseLeave += CheckBox_MouseLeave;
 
                     SensorsStackPanel.Children.Add(checkBox);
                 }
             }
         }
+
+        private void CheckBox_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Mouse.OverrideCursor = Cursors.Hand;
+        }
+
+        private void CheckBox_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Mouse.OverrideCursor = null;
+        }
+
+
+        private void SensorCheckBox_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+            string sensorName = "";
+
+            foreach (CheckBox item in SensorsStackPanel.Children)
+            {
+                if (item.Content.Equals(checkBox.Content))
+                {
+                    sensorName = item.Content.ToString();
+                }
+            }
+
+            if (!sensorName.Equals(string.Empty))
+            {
+                DragDrop.DoDragDrop(checkBox, sensorName, DragDropEffects.Move);
+            }
+        }
+
 
         private void SensorCheckBox_Checked(object sender, RoutedEventArgs e)
         {
@@ -288,7 +324,7 @@ namespace UI.UserControls.Live
 
             if (isChecked)
             {
-                selectedSensors.Add(new SelectedSensor { Name = content, ColorCode = ColorManager.GetGetChartColor.ToString() });
+                selectedSensors.Add(new SelectedSensor { Name = content, ColorCode = ColorManager.GetChartColor.ToString() });
             }
             else
             {
@@ -589,7 +625,11 @@ namespace UI.UserControls.Live
 
         private Chart MakeChart(Group group)
         {
-            Chart chart = new Chart(group.Name);
+            Chart chart = new Chart(group.Name,
+                                    ref MessageSnackbar,
+                                    (string sensorName, string groupName) => ReplaceChannelWithTemporaryGroup(sensorName, groupName),
+                                    () => BuildCharts(),
+                                    InitGroups);
 
             foreach (GroupAttribute attribute in group.Attributes)
             {
@@ -626,11 +666,36 @@ namespace UI.UserControls.Live
 
                     chart.AddSideValue(attribute.Name, values, colorCode: attribute.ColorCode, isActive: values.Any());
                 }
+                else
+                {
+                    chart.AddEmptySideValue(attribute.Name);
+                }
             }
 
             chart.SetAxisLimitsToAuto();
 
             return chart;
+        }
+
+        public void ReplaceChannelWithTemporaryGroup(string sensorName, string groupName)
+        {
+            foreach (CheckBox item in SensorsStackPanel.Children)
+            {
+                if (item.Content.ToString().Equals(sensorName))
+                {
+                    item.IsChecked = false;
+                }
+            }
+
+            InitializeGroupItems();
+
+            foreach (CheckBox item in GroupsStackPanel.Children)
+            {
+                if (item.Content.ToString().Equals(groupName))
+                {
+                    item.IsChecked = true;
+                }
+            }
         }
 
         private void RefreshCharts()
@@ -641,40 +706,43 @@ namespace UI.UserControls.Live
                 {
                     if (item is Chart chart)
                     {
-                        List<double> values = new List<double>();
-                        foreach (SensorValue value in sensorValues)
+                        if (chart.AttributeNames.Any())
                         {
-                            foreach (Sensor sensor in sensors)
+                            List<double> values = new List<double>();
+                            foreach (SensorValue value in sensorValues)
                             {
-                                if (sensor.Name.Equals(chart.AttributeNames.First()))
+                                foreach (Sensor sensor in sensors)
                                 {
-                                    if (value.SensorId == sensor.SensorId)
+                                    if (sensor.Name.Equals(chart.AttributeNames.First()))
                                     {
-                                        values.Add(value.Value);
+                                        if (value.SensorId == sensor.SensorId)
+                                        {
+                                            values.Add(value.Value);
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        if (values.Any())
-                        {
-                            if (RangeSlider.UpperValue > 0)
+                            if (values.Any())
                             {
-                                int minRenderIndex = (int)RangeSlider.LowerValue;
-                                int maxRenderIndex = (int)RangeSlider.UpperValue;
-                                if (maxRenderIndex >= values.Count)
+                                if (RangeSlider.UpperValue > 0)
                                 {
-                                    maxRenderIndex = values.Count - 1;
+                                    int minRenderIndex = (int)RangeSlider.LowerValue;
+                                    int maxRenderIndex = (int)RangeSlider.UpperValue;
+                                    if (maxRenderIndex >= values.Count)
+                                    {
+                                        maxRenderIndex = values.Count - 1;
+                                    }
+
+                                    maxRenderIndex -= minRenderIndex;
+
+                                    int dataIndex = (int)DataSlider.Value;
+                                    double dataIndexRate = (double)dataIndex / values.Count;
+
+                                    dataIndex = (int)((maxRenderIndex * dataIndexRate) + minRenderIndex);
+                                    chart.UpdateLiveHighlight(dataIndex);
+                                    chart.UpdateLiveSideValue(dataIndex);
                                 }
-
-                                maxRenderIndex -= minRenderIndex;
-
-                                int dataIndex = (int)DataSlider.Value;
-                                double dataIndexRate = (double)dataIndex / values.Count;
-
-                                dataIndex = (int)((maxRenderIndex * dataIndexRate) + minRenderIndex);
-                                chart.UpdateLiveHighlight(dataIndex);
-                                chart.UpdateLiveSideValue(dataIndex);
                             }
                         }
                     }

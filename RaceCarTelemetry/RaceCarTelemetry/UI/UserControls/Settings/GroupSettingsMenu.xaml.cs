@@ -285,6 +285,12 @@ namespace UI.UserControls.Settings
                 fieldsViewModel.LineWidth = activeAttribute.LineWidth;
                 SelectedAttributeColorPicker.Color = activeAttribute.ColorCode.ConvertColor();
             }
+
+            // change group settings item background color if empty
+            foreach (GroupSettingsItem item in GroupsStackPanel.Children)
+            {
+                item.ChangeBackgroundColor(GroupManager.GetGroup(item.Id).Attributes.Count == 0);
+            }
         }
 
         private void AddAttributeCardButton_Click(object sender, RoutedEventArgs e)
@@ -381,7 +387,7 @@ namespace UI.UserControls.Settings
             }
 
             Group activeGroup = GroupManager.GetGroup(activeGroupId);
-            GroupAttribute attribute = new GroupAttribute(activeGroup.LastAttributeId++, activeGroupId, attributeName, ColorManager.GetGetChartColor.ToString(), lineWidth);
+            GroupAttribute attribute = new GroupAttribute(activeGroup.LastAttributeId++, activeGroupId, attributeName, ColorManager.GetChartColor.ToString(), lineWidth);
             ChangeAddAttriutePopUpState(open: false);
             GroupManager.AddAttributeToGroup(activeGroupId, attribute, out string errorMessage);
 
