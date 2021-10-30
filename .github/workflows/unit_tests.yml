@@ -3,11 +3,7 @@ name: Unit tests
 on: 
   push:
     branches:
-      - master
-      - develop
-      - feature/*
-      - bugfix/*
-      - refactor/*
+      - "*"
 
 jobs:
   build:
