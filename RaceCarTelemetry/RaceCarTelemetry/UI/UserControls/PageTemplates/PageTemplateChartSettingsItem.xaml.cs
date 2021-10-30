@@ -55,7 +55,7 @@ namespace UI.UserControls.PageTemplates
                 data[i] = random.NextDouble();
             }
             ScottPlotChart.plt.PlotSignal(ys: data,
-                                          color: ColorManager.GetGetChartColor.ToString().ConvertToChartColor(),
+                                          color: ColorManager.GetChartColor.ToString().ConvertToChartColor(),
                                           lineWidth: 1,
                                           markerSize: 1);
             ScottPlotChart.plt.Legend();
