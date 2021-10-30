@@ -314,11 +314,23 @@ namespace UI.UserControls.Settings
             }
         }
 
-        private async void ChangeSessionStatusCardButton_Click(object sender, RoutedEventArgs e)
+        private void ChangeSessionStatusCardButton_Click(object sender, RoutedEventArgs e)
+        {
+            LiveSession selectedSession = GetSelectedSession;
+
+            if (selectedSession.IsLive)
+            {
+                PopupGrid.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ChangeSessionStatus(selectedSession);
+            }
+        }
+
+        private async void ChangeSessionStatus(LiveSession selectedSession)
         {
             UpdateLoadingGrid(visibility: true);
-
-            LiveSession selectedSession = GetSelectedSession;
 
             try
             {
@@ -496,6 +508,18 @@ namespace UI.UserControls.Settings
             {
                 DBToAppConnectionSpeedLabel.Content = "-";
             }
+        }
+
+        private void CancelPopUpCardButton_Click(object sender, RoutedEventArgs e)
+        {
+            PopupGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void ConfirmPopUpCardButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeSessionStatus(GetSelectedSession);
+
+            PopupGrid.Visibility = Visibility.Hidden;
         }
     }
 }
