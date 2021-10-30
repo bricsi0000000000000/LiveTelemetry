@@ -198,7 +198,7 @@ namespace UI.UserControls.Charts
         //    ScottPlotChart.plt.Frame(left: left, bottom: bottom, top: top, right: right);
         //}
 
-        private ChartValueItem AddEmptySideValue(string attributeName)
+        private ChartValueItem CreateSideValue(string attributeName)
         {
             ChartValueItem chartValue = new ChartValueItem(attributeName, "", ChartName);
 
@@ -213,7 +213,7 @@ namespace UI.UserControls.Charts
                 Values = xAxisValues
             });
 
-            ChartValueItem chartValue = AddEmptySideValue(attributeName);
+            ChartValueItem chartValue = CreateSideValue(attributeName);
 
             if (!string.IsNullOrEmpty(colorCode))
             {
@@ -224,6 +224,11 @@ namespace UI.UserControls.Charts
             }
 
             ValuesStackPanel.Children.Add(chartValue);
+        }
+
+        public void AddEmptySideValue(string attributeName)
+        {
+            AddSideValue(attributeName, null, isActive: false);
         }
 
         //public void UpdateSideValues(ref int dataIndex)
