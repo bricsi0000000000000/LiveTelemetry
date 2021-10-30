@@ -31,7 +31,7 @@ namespace UI.Errors
             snackbar.MessageQueue.Enqueue(message);
         }
 
-        private static void WriteLog(string message, string className, string errorMessage = "")
+        public static void WriteLog(string message, string className, string errorMessage = "")
         {
             using StreamWriter writer = new StreamWriter(FilePathManager.LogFilePath, append: true);
             writer.WriteLine($"[{DateTime.Now}]: {className}\t{message}\t{errorMessage}");

@@ -381,7 +381,7 @@ namespace UI.UserControls.Settings
             }
 
             Group activeGroup = GroupManager.GetGroup(activeGroupId);
-            GroupAttribute attribute = new GroupAttribute(activeGroup.LastAttributeId++, activeGroupId, attributeName, ColorManager.GetGetChartColor.ToString(), lineWidth);
+            GroupAttribute attribute = new GroupAttribute(activeGroup.LastAttributeId++, activeGroupId, attributeName, ColorManager.GetChartColor.ToString(), lineWidth);
             ChangeAddAttriutePopUpState(open: false);
             GroupManager.AddAttributeToGroup(activeGroupId, attribute, out string errorMessage);
 

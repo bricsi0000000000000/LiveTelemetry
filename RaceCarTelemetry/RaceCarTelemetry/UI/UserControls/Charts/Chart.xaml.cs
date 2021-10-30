@@ -1,13 +1,17 @@
 ﻿using DataModel.Chart;
+using MaterialDesignThemes.Wpf;
 using ScottPlot;
 using ScottPlot.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using UI.Errors;
 using UI.Extensions;
 using UI.Managers;
+using static UI.Managers.MenuManager;
 
 namespace UI.UserControls.Charts
 {
@@ -24,13 +28,20 @@ namespace UI.UserControls.Charts
         public bool HasVLine { get; set; } = false;
 
         private List<ChartValue> values = new List<ChartValue>();
+        private Snackbar messageSnackbar;
+        private Action<string, string> afterGroupDrop;
+        private Action buildCharts;
+        private InitializeGroups initializeGroups;
 
-
-        public Chart(string name)
+        public Chart(string name, ref Snackbar messageSnackbar, Action<string, string> afterGroupDrop, Action buildCharts, InitializeGroups initializeGroups)
         {
             InitializeComponent();
 
             ChartName = name;
+            this.messageSnackbar = messageSnackbar;
+            this.afterGroupDrop = afterGroupDrop;
+            this.buildCharts = buildCharts;
+            this.initializeGroups = initializeGroups;
 
             AttributeNames = new List<string>();
 
@@ -289,49 +300,52 @@ namespace UI.UserControls.Charts
 
         private void Grid_Drop(object sender, System.Windows.DragEventArgs e)
         {
-            //    Mouse.OverrideCursor = Cursors.Wait;
+            Mouse.OverrideCursor = Cursors.Wait;
 
-            //    string channelName = e.Data.GetData(typeof(string)).ToString();
+            string sensorName = e.Data.GetData(typeof(string)).ToString();
 
-            //    var group = GroupManager.GetGroup(ChartName);
+            DataModel.Group group = GroupManager.GetGroup(ChartName);
 
-            //    if (group != null)
-            //    {
-            //        if (group.GetAttribute(channelName) == null)
-            //        {
-            //            GroupManager.GetGroup(ChartName).AddAttribute(channelName, ColorManager.GetChartColor.ToString(), 1);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (!attributeNames.Contains(channelName))
-            //        {
-            //            attributeNames.Add(channelName);
+            if (group != null)
+            {
+                if (group.GetAttribute(sensorName) == null)
+                {
+                    GroupManager.GetGroup(ChartName).AddAttribute(sensorName, ColorManager.GetChartColor.ToString(), 1);
+                }
+            }
+            else
+            {
+                if (!AttributeNames.Contains(sensorName))
+                {
+                    AttributeNames.Add(sensorName);
 
-            //            string oldName = ChartName;
+                    string oldName = ChartName;
 
-            //            var temporaryGroup = GroupManager.GetGroup($"Temporary{GroupManager.TemporaryGroupIndex}");
+                    DataModel.Group temporaryGroup = GroupManager.GetGroup($"Temporary{GroupManager.TemporaryGroupIndex}");
 
-            //            while (temporaryGroup != null)
-            //            {
-            //                GroupManager.TemporaryGroupIndex++;
-            //                temporaryGroup = GroupManager.GetGroup($"Temporary{GroupManager.TemporaryGroupIndex}");
-            //            }
+                    while (temporaryGroup != null)
+                    {
+                        GroupManager.TemporaryGroupIndex++;
+                        temporaryGroup = GroupManager.GetGroup($"Temporary{GroupManager.TemporaryGroupIndex}");
+                    }
 
-            //            ChartName = $"Temporary{GroupManager.TemporaryGroupIndex}";
+                    ChartName = $"Temporary{GroupManager.TemporaryGroupIndex}";
 
-            //            GroupManager.AddGroup(GroupManager.MakeGroupWithAttributes(ChartName, attributeNames));
-            //            ((DriverlessMenu)MenuManager.GetMenuTab(TextManager.DriverlessMenuName).Content).ReplaceChannelWithTemporaryGroup(oldName, ChartName);
-            //            MenuManager.LiveTelemetry.ReplaceChannelWithTemporaryGroup(oldName, ChartName);
-            //        }
-            //    }
+                    GroupManager.AddGroup(GroupManager.MakeGroupWithAttributes(ChartName, AttributeNames), out string errorMessage);
+                    if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        ErrorManager.ShowMessage(errorMessage, messageSnackbar, MessageType.Error, className: nameof(Chart));
+                        return;
+                    }
 
-            //    GroupManager.SaveGroups();
-            //    ((GroupSettings)((SettingsMenu)MenuManager.GetMenuTab(TextManager.SettingsMenuName).Content).GetTab(TextManager.GroupsSettingsName).Content).InitGroups();
-            //    ((DriverlessMenu)MenuManager.GetMenuTab(TextManager.DriverlessMenuName).Content).BuildCharts();
-            //    MenuManager.LiveTelemetry.BuildCharts();
+                    initializeGroups();
+                    afterGroupDrop(oldName, ChartName);
+                }
+            }
 
-            //    Mouse.OverrideCursor = null;
+            buildCharts();
+
+            Mouse.OverrideCursor = null;
         }
     }
 }
