@@ -665,6 +665,10 @@ namespace UI.UserControls.Live
 
                     chart.AddSideValue(attribute.Name, values, colorCode: attribute.ColorCode, isActive: values.Any());
                 }
+                else
+                {
+                    chart.AddEmptySideValue(attribute.Name);
+                }
             }
 
             chart.SetAxisLimitsToAuto();
