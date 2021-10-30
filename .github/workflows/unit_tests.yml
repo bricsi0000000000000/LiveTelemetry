@@ -28,4 +28,4 @@ jobs:
         uses: actions/upload-artifact@v2  
         with:
           name: test_results
-          path: RaceCarTelemetry\RaceCarTelemetry\UnitTest\TestResultstest_results.log
+          path: RaceCarTelemetry\RaceCarTelemetry\UnitTest\test_results.txt
