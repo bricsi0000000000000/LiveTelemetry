@@ -138,7 +138,8 @@ namespace UI.UserControls.Live
             {
                 CheckBox checkBox = new CheckBox()
                 {
-                    Content = group.Name
+                    Content = group.Name,
+                    Foreground = group.Attributes.Any() ? ColorManager.FontColor.ConvertBrush() : ColorManager.Gray.ConvertBrush()
                 };
 
                 checkBox.IsChecked = selectedGroups.Contains(group.Name);
