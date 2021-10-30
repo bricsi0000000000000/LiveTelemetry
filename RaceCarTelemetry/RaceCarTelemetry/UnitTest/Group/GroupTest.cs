@@ -8,7 +8,7 @@ namespace UnitTest.Group
     {
         private const string GOOD_GROUPS_PATH = "../../../Group/good_groups/";
         private const string WRONG_GROUPS_PATH = "../../../Group/wrong_groups/";
-        private const string TEST_RESULT_LOG_PATH = "../../../TestResults/test_results.log";
+        private const string TEST_RESULT_LOG_PATH = "../../../TestResults/test_results.txt";
 
 
         [TearDown]
