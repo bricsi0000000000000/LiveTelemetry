@@ -3,11 +3,7 @@ name: Unit tests
 on: 
   push:
     branches:
-      - master
-      - develop
-      - feature/*
-      - bugfix/*
-      - refactor/*
+      - "*"
 
 jobs:
   build:
@@ -16,11 +12,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.1.0
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
+
       - name: Build unit test project
         run: cd RaceCarTelemetry && cd RaceCarTelemetry && dotnet build UnitTest
+
       - name: Run unit tests
         run: cd RaceCarTelemetry && cd RaceCarTelemetry && dotnet test UnitTest 
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2  
+        with:
+          name: test_results
+          path: RaceCarTelemetry\RaceCarTelemetry\UnitTest\test_results.txt
