@@ -724,7 +724,7 @@ namespace UI.UserControls.Live
                             {
                                 foreach (Sensor sensor in sensors)
                                 {
-                                    if (sensor.Name.Equals(chart.AttributeNames.First()))
+                                    if (chart.AttributeNames.Contains(sensor.Name))
                                     {
                                         if (value.SensorId == sensor.SensorId)
                                         {
