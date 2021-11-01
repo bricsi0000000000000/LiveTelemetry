@@ -34,6 +34,13 @@ namespace UI.UserControls.Settings
         private int selectedSessionId;
         private bool gettingsHealthCheck;
 
+        private enum ConfirmPopupStates
+        {
+            DeleteSession,
+            ChangeSessionState
+        }
+        private ConfirmPopupStates confirmPopupStates;
+
         public delegate void ChangeSelectedSession(int selectedSessionId);
 
         public LiveSettingsMenu(UpdateLiveMenu updateLiveMenu, FinishedReadingConfiguration finishedReadingConfiguration)
@@ -320,7 +327,9 @@ namespace UI.UserControls.Settings
 
             if (selectedSession.IsLive)
             {
-                PopupGrid.Visibility = Visibility.Visible;
+                confirmPopupStates = ConfirmPopupStates.ChangeSessionState;
+                ConfirmPopupGrid.Visibility = Visibility.Visible;
+                ConfirmPopupText.Text = "You are in an active session.\nAre you sure to change it to offline?";
             }
             else
             {
@@ -396,7 +405,14 @@ namespace UI.UserControls.Settings
             }
         }
 
-        private async void DeleteSessionCardButton_Click(object sender, RoutedEventArgs e)
+        private void DeleteSessionCardButton_Click(object sender, RoutedEventArgs e)
+        {
+            confirmPopupStates = ConfirmPopupStates.DeleteSession;
+            ConfirmPopupGrid.Visibility = Visibility.Visible;
+            ConfirmPopupText.Text = $"Are you sure to delete session '{SelectedSessionNameTextBox.Text}'?";
+        }
+
+        private async void DeleteSession()
         {
             UpdateLoadingGrid(visibility: true, "Deleting session..");
 
@@ -512,14 +528,22 @@ namespace UI.UserControls.Settings
 
         private void CancelPopUpCardButton_Click(object sender, RoutedEventArgs e)
         {
-            PopupGrid.Visibility = Visibility.Hidden;
+            ConfirmPopupGrid.Visibility = Visibility.Hidden;
         }
 
         private void ConfirmPopUpCardButton_Click(object sender, RoutedEventArgs e)
         {
-            ChangeSessionStatus(GetSelectedSession);
+            switch (confirmPopupStates)
+            {
+                case ConfirmPopupStates.DeleteSession:
+                    DeleteSession();
+                    break;
+                case ConfirmPopupStates.ChangeSessionState:
+                    ChangeSessionStatus(GetSelectedSession);
+                    break;
+            }
 
-            PopupGrid.Visibility = Visibility.Hidden;
+            ConfirmPopupGrid.Visibility = Visibility.Hidden;
         }
     }
 }
