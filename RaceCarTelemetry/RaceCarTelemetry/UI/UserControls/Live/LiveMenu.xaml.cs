@@ -438,12 +438,6 @@ namespace UI.UserControls.Live
 
                         getDataSignal.Set();
 
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            BuildCharts();
-                            SetUpSliders();
-                        });
-
                         if (activeSession.IsLive)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
@@ -452,14 +446,12 @@ namespace UI.UserControls.Live
                             });
                         }
                     }
-                    else
+
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            BuildCharts();
-                            SetUpSliders();
-                        });
-                    }
+                        BuildCharts();
+                        SetUpSliders();
+                    });
 
                     if (!activeSession.IsLive)
                     {
