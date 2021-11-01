@@ -442,7 +442,6 @@ namespace UI.UserControls.Live
                         {
                             BuildCharts();
                             SetUpSliders();
-                            // MenuManager.LiveSettings.ChangeLoadedPackagesLabel(lastPackageId);
                         });
 
                         if (activeSession.IsLive)
@@ -452,6 +451,14 @@ namespace UI.UserControls.Live
                                 //MenuManager.LiveSettings.UpdateCarStatus(sensorValues.First().SentTime, stopwatch.ElapsedMilliseconds);
                             });
                         }
+                    }
+                    else
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            BuildCharts();
+                            SetUpSliders();
+                        });
                     }
 
                     if (!activeSession.IsLive)
@@ -491,7 +498,11 @@ namespace UI.UserControls.Live
                     {
                         if (group.Attributes.Any())
                         {
-                            values = sensorValues.FindAll(x => x.SensorId == sensors.Find(i => i.Name.Equals(group.Attributes.First().Name)).SensorId).Select(x => x.Value).ToList();
+                            Sensor sensor = sensors.Find(i => i.Name.Equals(group.Attributes.First().Name));
+                            if (sensor != null)
+                            {
+                                values = sensorValues.FindAll(x => x.SensorId == sensor.SensorId).Select(x => x.Value).ToList();
+                            }
                         }
                     }
                 }

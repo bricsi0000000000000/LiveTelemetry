@@ -42,9 +42,9 @@ namespace UI.UserControls.Settings
             LiveSettingsMenu = new LiveSettingsMenu(updateLiveMenu, finishedReadingConfiguration);
             GroupSettingsMenu = new GroupSettingsMenu(finishedReadingGroups, updateLiveMenuCharts);
 
-            AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu);
+            AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu, selected: true);
             AddSettingsTab(TextManager.GROUP_SETTINGS_MENU, GroupSettingsMenu);
-            AddSettingsTab(TextManager.PAGE_TEMPLATES_SETTINGS_MENU, new PageTemplateSettingsMenu(finishedReadingPageTemplates, updateLiveMenuCharts), selected: true);
+            AddSettingsTab(TextManager.PAGE_TEMPLATES_SETTINGS_MENU, new PageTemplateSettingsMenu(finishedReadingPageTemplates, updateLiveMenuCharts));
         }
 
         private void AddSettingsTab(string header, UserControl content, bool selected = false)
