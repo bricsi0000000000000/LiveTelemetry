@@ -353,7 +353,7 @@ namespace UI.UserControls.Settings
                     apiCall = ConfigurationManager.Configuration.GetApiCall(ApiCallManager.CHANGE_SESSION_TO_LIVE);
                 }
 
-                int resultCode = await liveBusinessLogic.ChangeSessionState(client, !selectedSession.IsLive, selectedSession.SessionId, apiCall);
+                int resultCode = await liveBusinessLogic.ChangeSessionState(client, selectedSession.SessionId, apiCall);
 
                 if (resultCode == (int)HttpStatusCode.OK)
                 {
