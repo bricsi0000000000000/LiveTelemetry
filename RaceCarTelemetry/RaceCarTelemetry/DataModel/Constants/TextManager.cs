@@ -2,8 +2,7 @@
 {
     public static class TextManager
     {
-        //public const string ROOT_DIRECTORY = @"..\..\..\..\..\";
-        public const string ROOT_DIRECTORY = "";
+        public const string ROOT_DIRECTORY = @"..\..\..\..\..\";
 
         public const string ERROR_MESSAGES_LOG_FILE = "error_messages.log";
 
@@ -23,13 +22,10 @@
 
         public const string CONFIGURATION_FILE = "configuration.json";
 
-        //public const string DEFAULT_FILES_FOLDER = "default_files";
-        public const string DEFAULT_FILES_FOLDER = "";
+        public const string DEFAULT_FILES_FOLDER = "default_files";
 
-        //public const string CONFIGURATION_FILES_FOLDER = "configuration_files";
-        public const string CONFIGURATION_FILES_FOLDER = "";
+        public const string CONFIGURATION_FILES_FOLDER = "configuration_files";
 
-        //public const string LOGS_FILE_FOLDER = "logs";
-        public const string LOGS_FILE_FOLDER = "";
+        public const string LOGS_FILE_FOLDER = "logs";
     }
 }
