@@ -75,7 +75,7 @@ namespace DataAccess
 
         public void SavePageTemplates(List<PageTemplate> templates, out string errorMessage)
         {
-            if (IsFileExists(FilePathManager.PageTemplateFilePath, out errorMessage))
+            if (CheckFile(FilePathManager.PageTemplateFilePath, out errorMessage))
             {
                 using StreamWriter writer = new StreamWriter(FilePathManager.PageTemplateFilePath);
 

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace DataAccess
 {
@@ -111,7 +112,7 @@ namespace DataAccess
 
         public void SaveGroups(List<Group> groups, out string errorMessage)
         {
-            if (IsFileExists(FilePathManager.GroupFilePath, out errorMessage))
+            if (CheckFile(FilePathManager.GroupFilePath, out errorMessage))
             {
                 using StreamWriter writer = new StreamWriter(FilePathManager.GroupFilePath);
 

@@ -220,20 +220,23 @@ namespace UI.UserControls.Settings
         private void RearrangeCharts()
         {
             ChartsStackPanel.Children.Clear();
-            PageTemplate activeTemplate = PageTemplateManager.GetPageTemplate(activeTemplateId);
-            activeTemplate.Charts.Clear();
-
-            chartIndex = 0;
-            foreach (PageTemplateChartSettingsItem chart in charts)
+            if (activeTemplateId != -1)
             {
-                chart.Index = chartIndex++;
-                ChartsStackPanel.Children.Add(chart);
-                activeTemplate.Charts.Add(new PageTemplateChart { Name = chart.ChartName, Index = chart.Index });
+                PageTemplate activeTemplate = PageTemplateManager.GetPageTemplate(activeTemplateId);
+                activeTemplate.Charts.Clear();
+
+                chartIndex = 0;
+                foreach (PageTemplateChartSettingsItem chart in charts)
+                {
+                    chart.Index = chartIndex++;
+                    ChartsStackPanel.Children.Add(chart);
+                    activeTemplate.Charts.Add(new PageTemplateChart { Name = chart.ChartName, Index = chart.Index });
+                }
+
+                Save();
+
+                updateLiveMenuCharts();
             }
-
-            Save();
-
-            updateLiveMenuCharts();
         }
 
         private void InitializePageTemplates()

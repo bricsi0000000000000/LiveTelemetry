@@ -12,14 +12,58 @@ namespace DataAccess
     {
         protected virtual bool CheckFile(string fileName, out string errorMessage)
         {
-            if (!IsFileExists(fileName, out errorMessage))
+            try
             {
+                if (!IsFileReachable(fileName, out errorMessage))
+                {
+                    return false;
+                }
+
+                if (!IsFileExists(fileName, out errorMessage))
+                {
+                    return false;
+                }
+
+                if (!IsFileEmpty(fileName, out errorMessage))
+                {
+                    return false;
+                }
+
+                errorMessage = string.Empty;
+
+                return true;
+            }
+            catch (Exception exception) // check if the the application privilige to access the fil. More info https://stackoverflow.com/questions/265953/how-can-you-easily-check-if-access-is-denied-for-a-file-in-net
+            {
+                errorMessage = exception.Message;
+
                 return false;
             }
+        }
 
-            if (!IsFileEmpty(fileName, out errorMessage))
+        /// <summary>
+        /// Is the file used by an other process
+        /// </summary>
+        protected virtual bool IsFileReachable(string fileName, out string errorMessage)
+        {
+            FileStream fileStream = null;
+            FileInfo fileInfo = new FileInfo(fileName);
+
+            try
             {
+                fileStream = fileInfo.Open(FileMode.Open);
+            }
+            catch (IOException)
+            {
+                errorMessage = $"Can't open {fileName.Split('/').Last()} because it is used by another process.";
                 return false;
+            }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Close();
+                }
             }
 
             errorMessage = string.Empty;
