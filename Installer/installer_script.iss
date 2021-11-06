@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Race Car Telemetry"
-#define MyAppVersion "5.2"
+#define MyAppVersion "5.1"
 #define MyAppPublisher "Bólya Richárd"
 #define MyAppURL "http://richard.bolya.eu/"
 #define MyAppExeName "UI.exe"
@@ -13,7 +13,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{039FD17F-0712-4235-976D-30B4758E9EEC}
+AppId={{630A42E0-F071-48A3-A0FD-FC744979A394}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -59,7 +59,6 @@ Source: "D:\programming\c#\thesis\LiveTelemetry\RaceCarTelemetry\RaceCarTelemetr
 Source: "D:\programming\c#\thesis\LiveTelemetry\RaceCarTelemetry\RaceCarTelemetry\UI\bin\Debug\netcoreapp3.1\UI.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\programming\c#\thesis\LiveTelemetry\RaceCarTelemetry\RaceCarTelemetry\UI\bin\Debug\netcoreapp3.1\UI.runtimeconfig.dev.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\programming\c#\thesis\LiveTelemetry\RaceCarTelemetry\RaceCarTelemetry\UI\bin\Debug\netcoreapp3.1\UI.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\programming\c#\thesis\LiveTelemetry\RaceCarTelemetry\configuration_files\api_configuration.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\programming\c#\thesis\LiveTelemetry\RaceCarTelemetry\configuration_files\configuration.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\programming\c#\thesis\LiveTelemetry\RaceCarTelemetry\default_files\groups.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\programming\c#\thesis\LiveTelemetry\RaceCarTelemetry\default_files\page_templates.json"; DestDir: "{app}"; Flags: ignoreversion
