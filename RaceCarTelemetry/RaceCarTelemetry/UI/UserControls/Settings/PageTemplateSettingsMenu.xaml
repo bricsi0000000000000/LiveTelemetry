@@ -95,6 +95,7 @@
                                                      Kind="ContentSave"
                                                      Click="ChangeSelectedPageNameCardButton_Click"
                                                      />
+
             </Grid>
 
             <ScrollViewer Grid.Row="1" 
@@ -138,6 +139,12 @@
             </ScrollViewer>
         </Grid>
 
+        <custom:EmptyPanel x:Name="NoPageTemplatesGrid"
+                           Grid.Column="2"
+                           Grid.ColumnSpan="3"
+                           Visibility="Visible"
+                           Kind="FormatListBulleted"/>
+        
         <Grid Name="PopUpBackground"
               Grid.ColumnSpan="5"
               Background="{DynamicResource PopUpBackground}"

@@ -10,9 +10,10 @@ namespace UI
         {
             InitializeComponent();
 
-            Title = "Race car telemetry 5.0";
+            Title = "Race Car Telemetry 5.1";
 
             ErrorManager.Initialize();
+
             MenuManager.InitMainMenuTabs(MainMenuTabControl);
         }
     }
