@@ -1,9 +1,10 @@
 ﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
 namespace UI.ValidationRules
 {
-    public class IsNumberValidationRule : ValidationRule
+    public class IsIpAddressValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -13,20 +14,13 @@ namespace UI.ValidationRules
             }
             else
             {
-                if (int.TryParse(value.ToString(), out int result))
+                if (Regex.IsMatch(value.ToString(), @"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"))
                 {
-                    if (result > 0)
-                    {
-                        return ValidationResult.ValidResult;
-                    }
-                    else
-                    {
-                        return new ValidationResult(false, "Must be bigger than 0");
-                    }
+                    return ValidationResult.ValidResult;
                 }
                 else
                 {
-                    return new ValidationResult(false, "Number is required");
+                    return new ValidationResult(false, "Invalid format");
                 }
             }
         }

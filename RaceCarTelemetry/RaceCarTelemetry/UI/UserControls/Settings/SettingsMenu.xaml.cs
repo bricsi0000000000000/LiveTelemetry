@@ -13,6 +13,7 @@ namespace UI.UserControls.Settings
         public GroupSettingsMenu GroupSettingsMenu { get; set; }
 
         private PageTemplateSettingsMenu pageTemplateSettingsMenu;
+        private ConfigurationMenu configurationMenu;
 
         private static readonly List<TabItem> menuTabs = new List<TabItem>();
 
@@ -43,13 +44,18 @@ namespace UI.UserControls.Settings
         {
             settingsTabControl.Items.Clear();
 
-            LiveSettingsMenu = new LiveSettingsMenu(updateLiveMenu, finishedReadingConfiguration);
+            LiveSettingsMenu = new LiveSettingsMenu(updateLiveMenu);
             pageTemplateSettingsMenu = new PageTemplateSettingsMenu(finishedReadingPageTemplates, updateLiveMenuCharts);
             GroupSettingsMenu = new GroupSettingsMenu(finishedReadingGroups, updateLiveMenuCharts, new UpdateGroupsAfterChangeInSettings(pageTemplateSettingsMenu.InitializeGroups));
+            configurationMenu = new ConfigurationMenu(finishedReadingConfiguration,
+                                                      LiveSettingsMenu.AfterConfigurationIsLoaded,
+                                                      new ConfigurationMenu.AfterConfigurationIsUpdated(LiveSettingsMenu.AfterConfigurationIsUpdated),
+                                                      finishedReadingConfiguration);
 
             AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu, selected: true);
             AddSettingsTab(TextManager.GROUP_SETTINGS_MENU, GroupSettingsMenu);
             AddSettingsTab(TextManager.PAGE_TEMPLATES_SETTINGS_MENU, pageTemplateSettingsMenu);
+            AddSettingsTab(TextManager.CONFIGURATION_MENU, configurationMenu);
         }
 
         private void AddSettingsTab(string header, UserControl content, bool selected = false)

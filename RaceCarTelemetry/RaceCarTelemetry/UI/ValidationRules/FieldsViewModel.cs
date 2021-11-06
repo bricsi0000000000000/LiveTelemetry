@@ -22,10 +22,13 @@ namespace UI.ValidationRules
         private string? horizontalAxis;
         private string? changeLineWidth;
         private string? sessionName;
-        private string? sessionDate;
         private string? pageTemplateName;
         private string? addPageTemplateName;
         private string? addSensorName;
+        private string? ipAddress;
+        private int? port;
+        private int? timeOut;
+        private int? waitBetweenCollectData;
 
         public string? Name
         {
@@ -139,6 +142,30 @@ namespace UI.ValidationRules
         {
             get => addSensorName;
             set => this.MutateVerbose(ref addSensorName, value, RaisePropertyChanged());
+        }
+
+        public string? IpAddress
+        {
+            get => ipAddress;
+            set => this.MutateVerbose(ref ipAddress, value, RaisePropertyChanged());
+        }
+
+        public int? Port
+        {
+            get => port;
+            set => this.MutateVerbose(ref port, value, RaisePropertyChanged());
+        }
+
+        public int? TimeOut
+        {
+            get => timeOut;
+            set => this.MutateVerbose(ref timeOut, value, RaisePropertyChanged());
+        }
+
+        public int? WaitBetweenCollectData
+        {
+            get => waitBetweenCollectData;
+            set => this.MutateVerbose(ref waitBetweenCollectData, value, RaisePropertyChanged());
         }
 
 

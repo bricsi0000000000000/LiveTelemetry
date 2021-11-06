@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace UI.ValidationRules
 {
@@ -10,9 +9,14 @@ namespace UI.ValidationRules
     {
         public static bool MutateVerbose<TField>(this INotifyPropertyChanged _, ref TField field, TField newValue, Action<PropertyChangedEventArgs> raise, [CallerMemberName] string propertyName = null)
         {
-            if (EqualityComparer<TField>.Default.Equals(field, newValue)) return false;
+            if (EqualityComparer<TField>.Default.Equals(field, newValue))
+            {
+                return false;
+            }
+
             field = newValue;
             raise?.Invoke(new PropertyChangedEventArgs(propertyName));
+
             return true;
         }
     }
