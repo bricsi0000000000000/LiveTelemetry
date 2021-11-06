@@ -1,7 +1,6 @@
-﻿using DataModel.Constants;
+﻿using BusinessLogic;
 using MaterialDesignThemes.Wpf;
 using System;
-using System.IO;
 using UI.Extensions;
 using UI.Managers;
 
@@ -15,8 +14,21 @@ namespace UI.Errors
 
     public static class ErrorManager
     {
+        private static ErrorManagerBusinessLogic errorManagerBusinessLogic;
+        private static bool isInitialized = false;
+        public static void Initialize()
+        {
+            errorManagerBusinessLogic = new ErrorManagerBusinessLogic();
+            isInitialized = true;
+        }
+
         public static void ShowMessage(string message, Snackbar snackbar, MessageType type, string className = "", string exceptionMessage = "")
         {
+            if (!isInitialized)
+            {
+                throw new Exception("Error manager is not initialized");
+            }
+
             switch (type)
             {
                 case MessageType.Error:
@@ -33,8 +45,12 @@ namespace UI.Errors
 
         public static void WriteLog(string message, string className, string errorMessage = "")
         {
-            using StreamWriter writer = new StreamWriter(FilePathManager.LogFilePath, append: true);
-            writer.WriteLine($"[{DateTime.Now}]: {className}\t{message}\t{errorMessage}");
+            if (!isInitialized)
+            {
+                throw new Exception("Error manager is not initialized");
+            }
+
+            errorManagerBusinessLogic.WriteLog(message, className, errorMessage);
         }
     }
 }

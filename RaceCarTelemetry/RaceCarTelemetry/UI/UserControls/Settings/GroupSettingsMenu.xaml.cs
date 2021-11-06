@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UI.Extensions;
 using System.Windows.Input;
 using static UI.Managers.MenuManager;
+using static UI.UserControls.Settings.SettingsMenu;
 
 namespace UI.UserControls.Settings
 {
@@ -24,12 +25,14 @@ namespace UI.UserControls.Settings
         public delegate void ChangeActiveAttribute(int selectedAttributeId);
 
         private UpdateLiveMenuCharts updateLiveMenuCharts;
+        private UpdateGroupsAfterChangeInSettings updateGroupsAfterChangeInSettings;
 
-        public GroupSettingsMenu(FinishedReadingGroups finishedReadingGroups, UpdateLiveMenuCharts updateLiveMenuCharts)
+        public GroupSettingsMenu(FinishedReadingGroups finishedReadingGroups, UpdateLiveMenuCharts updateLiveMenuCharts, UpdateGroupsAfterChangeInSettings updateGroupsAfterChangeInSettings)
         {
             InitializeComponent();
 
             this.updateLiveMenuCharts = updateLiveMenuCharts;
+            this.updateGroupsAfterChangeInSettings = updateGroupsAfterChangeInSettings;
 
             fieldsViewModel.AddGroupName =
             fieldsViewModel.AddAttributeName =
@@ -97,7 +100,7 @@ namespace UI.UserControls.Settings
                 UpdateGroups(activeGroupId);
             }
 
-            updateLiveMenuCharts();
+            UpdateAfterChangeGroup();
         }
 
         private void RemoveGroup(int groupId)
@@ -124,7 +127,14 @@ namespace UI.UserControls.Settings
 
             UpdateGroups(activeGroupId);
 
+            UpdateAfterChangeGroup();
+        }
+
+        /// <param name="groupName">Fill only if delete</param>
+        private void UpdateAfterChangeGroup()
+        {
             updateLiveMenuCharts();
+            updateGroupsAfterChangeInSettings();
         }
 
         private void UpdateGroups(int selectedGroupId)
@@ -215,7 +225,7 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(errorMessage))
             {
                 InitializeGroups();
-                updateLiveMenuCharts();
+                UpdateAfterChangeGroup();
             }
             else
             {

@@ -365,7 +365,7 @@
             </Grid>
 
             <Grid Grid.ColumnSpan="5"
-                  Name="PopupGrid"
+                  Name="ConfirmPopupGrid"
                   Background="{DynamicResource FontColor}"
                   Opacity=".8"
                   Visibility="Hidden">
@@ -379,8 +379,7 @@
                             <RowDefinition Height="45" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="You are in an active session.
-                                   Are you sure to change it to offline?"
+                        <TextBlock x:Name="ConfirmPopupText"
                                    TextWrapping="Wrap"
                                    HorizontalAlignment="Center"/>
 

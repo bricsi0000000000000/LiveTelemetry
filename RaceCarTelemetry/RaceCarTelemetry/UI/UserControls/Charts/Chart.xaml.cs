@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using UI.Errors;
 using UI.Extensions;
 using UI.Managers;
@@ -58,47 +57,6 @@ namespace UI.UserControls.Charts
             AttributeNames.Add(attributeName);
         }
 
-        ///// <summary>
-        ///// Checks if the <paramref name="channelName"/> is in the <see cref="attributeNames"/> list.
-        ///// </summary>
-        ///// <param name="channelName">Channels name you want to check.</param>
-        ///// <returns></returns>
-        //public bool HasChannelName(string channelName) => attributeNames.Contains(channelName);
-
-        ///// <summary>
-        ///// Adds and renders a plot for <see cref="Driverless"/>.
-        ///// </summary>
-        ///// <param name="xAxisValues">Values on <b>horizontal</b> axis.</param>
-        ///// <param name="yAxisValues">Values on <b>vertical</b> axis.</param>
-        ///// <param name="lineColor"><see cref="Color"/> of the line.</param>
-        ///// <param name="xAxisLabel">Label on <b>horizontal</b> axis. Default is <c>x</c></param>
-        //public void AddPlot(double[] xAxisValues,
-        //                    double[] yAxisValues,
-        //                    Color lineColor,
-        //                    int lineWidth,
-        //                    string xAxisLabel)
-        //{
-        //    ScottPlotChart.plt.PlotScatter(xs: xAxisValues, ys: yAxisValues, markerShape: MarkerShape.none, color: lineColor, lineWidth: lineWidth);
-
-        //    ScottPlotChart.plt.XLabel(xAxisLabel, bold: true);
-        //    ScottPlotChart.plt.Legend();
-        //    ScottPlotChart.Render();
-        //}
-
-        //public void AddPlot(double[] xAxisValues,
-        //                    Color lineColor,
-        //                    int lineWidth,
-        //                    string xAxisLabel)
-        //{
-        //    if (xAxisValues.Any())
-        //    {
-        //        ScottPlotChart.plt.PlotSignal(xAxisValues, color: lineColor, lineWidth: lineWidth, markerSize: 1);
-        //        ScottPlotChart.plt.XLabel(xAxisLabel, bold: true);
-        //        ScottPlotChart.plt.Legend();
-        //        ScottPlotChart.Render();
-        //    }
-        //}
-
         public void AddLivePlot(List<double> xAxisValues,
                                 System.Drawing.Color lineColor,
                                 string attributeName,
@@ -144,23 +102,6 @@ namespace UI.UserControls.Charts
             }
         }
 
-        //public void UpdateHighlight(double xValue)
-        //{
-        //    if (plottableScatterHighlight != null)
-        //    {
-        //        plottableScatterHighlight.HighlightClear();
-        //    }
-
-        //    if (plottableVLine != null)
-        //    {
-        //        ScottPlotChart.plt.Clear(plottableVLine);
-        //    }
-
-        //    plottableVLine = ScottPlotChart.plt.PlotVLine(xValue, lineStyle: LineStyle.Dash, color: DefaultsManager.DefaultChartHighlightColor);
-
-        //    ScottPlotChart.Render();
-        //}
-
         public void UpdateLiveHighlight(int dataIndex)
         {
             if (plottableScatterHighlight != null)
@@ -178,25 +119,10 @@ namespace UI.UserControls.Charts
             ScottPlotChart.Render();
         }
 
-        ///// <summary>
-        ///// Sets the axis limits to automatic.
-        ///// </summary>
         public void SetAxisLimitsToAuto()
         {
             ScottPlotChart.plt.AxisAuto();
         }
-
-        ///// <summary>
-        ///// Sets the frame border visible or not.
-        ///// </summary>
-        ///// <param name="left">Left border.</param>
-        ///// <param name="bottom">Bottom border.</param>
-        ///// <param name="top">Top border.</param>
-        ///// <param name="right">Right</param>
-        //public void SetFrameBorder(bool left = true, bool bottom = true, bool top = true, bool right = true)
-        //{
-        //    ScottPlotChart.plt.Frame(left: left, bottom: bottom, top: top, right: right);
-        //}
 
         private ChartValueItem CreateSideValue(string attributeName)
         {
@@ -231,50 +157,6 @@ namespace UI.UserControls.Charts
             AddSideValue(attributeName, null, isActive: false);
         }
 
-        //public void UpdateSideValues(ref int dataIndex)
-        //{
-        //    //  var channel = InputFileManager.GetInputFile(inputFileID).GetChannel(channelName);
-
-        //    /*var unit = UnitOfMeasureManager.GetUnitOfMeasure(channelName);
-        //    if (unit == null)
-        //    {
-        //        unit = UnitOfMeasureManager.GetUnitOfMeasure(channelName.Replace("_", ""));
-        //    }*/
-
-        //    //var chartValue = new ChartValue(channelName, unit == null ? "" : unit.UnitOfMeasure, ChartName, color, inputFileID);
-        //    //chartValue.SetUp(color, inputFileID);
-
-        //    // double value = dataIndex < channel.Data.Count ? channel.Data[dataIndex] : channel.Data.Last();
-
-        //    foreach (var item in ValuesStackPanel.Children)
-        //    {
-        //        if (item is ChartValue chartValue)
-        //        {
-        //            var currentValues = values.Find(x => x.Item1.Equals(chartValue.ChannelName));
-        //            if (currentValues != null)
-        //            {
-        //                if (currentValues.Item2.Length > 0)
-        //                {
-        //                    double currentValue = dataIndex < currentValues.Item2.Length ? currentValues.Item2[dataIndex] : currentValues.Item2.Last();
-        //                    chartValue.SetChannelValue(currentValue);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    // chartValue.SetChannelValue(value);
-
-        //    // ValuesStackPanel.Children.Add(chartValue);
-
-        //    /*SettingsStackPanel.Children.Add(new ChartValueSettings(channelName: channelName,
-        //                                                           groupName: ChartName,
-        //                                                           lineWidth: lineWidth,
-        //                                                           color: color,
-        //                                                           inputFileID: inputFileID,
-        //                                                           isActive: isActive));*/
-
-        //    ChannelsGrid.Visibility = System.Windows.Visibility.Hidden;
-        //}
-
         public void UpdateLiveSideValue(int dataIndex)
         {
             if (values.Any())
@@ -284,7 +166,7 @@ namespace UI.UserControls.Charts
                     if (item is ChartValueItem chartValueItem)
                     {
                         List<double> attributeValues = values.Find(x => x.Name.Equals(chartValueItem.AttributeName)).Values;
-                        if (attributeValues.Any())
+                        if (attributeValues != null && attributeValues.Any())
                         {
                             double value;
                             if (dataIndex < attributeValues.Count)

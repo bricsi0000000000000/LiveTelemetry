@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UI.Errors;
 using UI.Managers;
 
 namespace UI
@@ -9,8 +10,9 @@ namespace UI
         {
             InitializeComponent();
 
-            Title = "Race car telemetry 4.0";
+            Title = "Race car telemetry 5.0";
 
+            ErrorManager.Initialize();
             MenuManager.InitMainMenuTabs(MainMenuTabControl);
         }
     }
