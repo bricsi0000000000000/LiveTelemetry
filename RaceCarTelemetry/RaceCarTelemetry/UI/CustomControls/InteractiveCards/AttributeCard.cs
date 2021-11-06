@@ -19,7 +19,6 @@ namespace UI.CustomControls
             set => SetValue(AttributeNameProperty, value);
         }
 
-
         public static readonly DependencyProperty LineWidthProperty = DependencyProperty.Register(nameof(LineWidth), typeof(string), typeof(AttributeCard), new PropertyMetadata(string.Empty));
 
         public string LineWidth

@@ -1,5 +1,10 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json;
+using System;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace DataAccess
 {
@@ -7,7 +12,7 @@ namespace DataAccess
     {
         protected virtual bool CheckFile(string fileName, out string errorMessage)
         {
-            if(!IsFileExists(fileName, out errorMessage))
+            if (!IsFileExists(fileName, out errorMessage))
             {
                 return false;
             }
@@ -47,6 +52,70 @@ namespace DataAccess
             {
                 errorMessage = string.Empty;
                 return true;
+            }
+        }
+
+        protected virtual async Task<T> CallGetApi<T>(HttpClient client, string apiCall)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(apiCall).ConfigureAwait(false);
+                ConfiguredTaskAwaitable<string> result = response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string resultString = result.GetAwaiter().GetResult();
+
+                return JsonConvert.DeserializeObject<T>(resultString);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        protected virtual async Task<int> CallPutApi(HttpClient client, string apiCall, object value)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PutAsJsonAsync(apiCall, value).ConfigureAwait(false);
+                ConfiguredTaskAwaitable<string> result = response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                int resultCode = int.Parse(result.GetAwaiter().GetResult());
+
+                return resultCode;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        protected virtual async Task<int> CallPostApi(HttpClient client, string apiCall, object value)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync(apiCall, value).ConfigureAwait(false);
+                ConfiguredTaskAwaitable<string> result = response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                int resultCode = int.Parse(result.GetAwaiter().GetResult());
+
+                return resultCode;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        protected virtual async Task<int> CallDeleteApi(HttpClient client, string apiCall)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.DeleteAsync(apiCall).ConfigureAwait(false);
+                ConfiguredTaskAwaitable<string> result = response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                int resultCode = int.Parse(result.GetAwaiter().GetResult());
+
+                return resultCode;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
             }
         }
     }

@@ -9,6 +9,7 @@ using UI.UserControls.PageTemplates;
 using UI.ValidationRules;
 using UI.Extensions;
 using static UI.Managers.MenuManager;
+using UI.UserControls.Charts;
 
 namespace UI.UserControls.Settings
 {
@@ -53,9 +54,17 @@ namespace UI.UserControls.Settings
                 activeTemplateId = -1;
             }
 
+            InitializeGroups();
 
+            finishedReadingPageTemplates();
+        }
+
+        public void InitializeGroups()
+        {
             if (GroupManager.Groups.Any())
             {
+                GroupsStackPanel.Children.Clear();
+
                 foreach (Group group in GroupManager.Groups)
                 {
                     CheckBox checkBox = new CheckBox()
@@ -69,23 +78,49 @@ namespace UI.UserControls.Settings
                     GroupsStackPanel.Children.Add(checkBox);
                 }
 
-                UpdateGroups();
             }
+
+            UpdateGroups();
 
             canUpdateCharts = true;
 
             InitializeCharts();
-
-            finishedReadingPageTemplates();
         }
 
         private void InitializeCharts()
         {
             if (activeTemplateId != -1)
             {
-                foreach (PageTemplateChart chart in PageTemplateManager.GetPageTemplate(activeTemplateId).Charts)
+                charts.Clear();
+
+                PageTemplate activeTemplate = PageTemplateManager.GetPageTemplate(activeTemplateId);
+
+                List<string> deletableChartNames = new List<string>();
+                foreach (PageTemplateChart chart in activeTemplate.Charts)
+                {
+                    if (GroupManager.GetGroup(chart.Name) == null)
+                    {
+                        deletableChartNames.Add(chart.Name);
+                    }
+                }
+
+                foreach (string deletableChartName in deletableChartNames)
+                {
+                    activeTemplate.RemoveGroup(deletableChartName);
+                    activeTemplate.RemoveChart(deletableChartName);
+                }
+
+                Save();
+
+                foreach (PageTemplateChart chart in activeTemplate.Charts)
                 {
                     charts.Add(new PageTemplateChartSettingsItem(chart.Name, chart.Index, MoveUp, MoveDown));
+                }
+
+                foreach (string name in PageTemplateManager.GetPageTemplate(activeTemplateId).SensorNames)
+                {
+                    PageTemplateChartSettingsItem chart = new PageTemplateChartSettingsItem(name, chartIndex++, MoveUp, MoveDown);
+                    charts.Add(chart);
                 }
 
                 if (charts.Any())
@@ -120,15 +155,18 @@ namespace UI.UserControls.Settings
         private void UpdateGroups()
         {
             PageTemplate activeTemplate = PageTemplateManager.GetPageTemplate(activeTemplateId);
-            foreach (object item in GroupsStackPanel.Children)
+            if (activeTemplate != null)
             {
-                if (item is CheckBox checkBox)
+                foreach (object item in GroupsStackPanel.Children)
                 {
-                    checkBox.IsChecked = activeTemplate.IsGroupExists(checkBox.Content.ToString());
+                    if (item is CheckBox checkBox)
+                    {
+                        checkBox.IsChecked = activeTemplate.IsGroupExists(checkBox.Content.ToString());
+                    }
                 }
-            }
 
-            UpdateCharts();
+                UpdateCharts();
+            }
         }
 
         private void UpdateCharts()

@@ -7,6 +7,13 @@ namespace UI.UserControls.Settings
 {
     public partial class SettingsMenu : UserControl
     {
+        public delegate void UpdateGroupsAfterChangeInSettings();
+
+        public LiveSettingsMenu LiveSettingsMenu { get; set; }
+        public GroupSettingsMenu GroupSettingsMenu { get; set; }
+
+        private PageTemplateSettingsMenu pageTemplateSettingsMenu;
+
         private static readonly List<TabItem> menuTabs = new List<TabItem>();
 
         private readonly UpdateLiveMenu updateLiveMenu;
@@ -14,9 +21,6 @@ namespace UI.UserControls.Settings
         private readonly FinishedReadingGroups finishedReadingGroups;
         private readonly FinishedReadingConfiguration finishedReadingConfiguration;
         private readonly FinishedReadingPageTemplates finishedReadingPageTemplates;
-
-        public LiveSettingsMenu LiveSettingsMenu;
-        public GroupSettingsMenu GroupSettingsMenu;
 
         public SettingsMenu(UpdateLiveMenu updateLiveMenu,
                             UpdateLiveMenuCharts updateLiveMenuCharts,
@@ -40,11 +44,12 @@ namespace UI.UserControls.Settings
             settingsTabControl.Items.Clear();
 
             LiveSettingsMenu = new LiveSettingsMenu(updateLiveMenu, finishedReadingConfiguration);
-            GroupSettingsMenu = new GroupSettingsMenu(finishedReadingGroups, updateLiveMenuCharts);
+            pageTemplateSettingsMenu = new PageTemplateSettingsMenu(finishedReadingPageTemplates, updateLiveMenuCharts);
+            GroupSettingsMenu = new GroupSettingsMenu(finishedReadingGroups, updateLiveMenuCharts, new UpdateGroupsAfterChangeInSettings(pageTemplateSettingsMenu.InitializeGroups));
 
-            AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu);
+            AddSettingsTab(TextManager.LIVE_SETTINGS_MENU, LiveSettingsMenu, selected: true);
             AddSettingsTab(TextManager.GROUP_SETTINGS_MENU, GroupSettingsMenu);
-            AddSettingsTab(TextManager.PAGE_TEMPLATES_SETTINGS_MENU, new PageTemplateSettingsMenu(finishedReadingPageTemplates, updateLiveMenuCharts), selected: true);
+            AddSettingsTab(TextManager.PAGE_TEMPLATES_SETTINGS_MENU, pageTemplateSettingsMenu);
         }
 
         private void AddSettingsTab(string header, UserControl content, bool selected = false)
