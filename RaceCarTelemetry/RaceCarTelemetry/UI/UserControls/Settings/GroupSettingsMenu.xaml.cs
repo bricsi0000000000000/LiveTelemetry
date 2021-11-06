@@ -133,6 +133,9 @@ namespace UI.UserControls.Settings
         /// <param name="groupName">Fill only if delete</param>
         private void UpdateAfterChangeGroup()
         {
+            NoAttributesGrid.Visibility = activeAttributeId == -1 ? Visibility.Visible: Visibility.Hidden;
+            NoGroupsGrid.Visibility = GroupManager.Groups.Any() ? Visibility.Hidden : Visibility.Visible;
+
             updateLiveMenuCharts();
             updateGroupsAfterChangeInSettings();
         }
@@ -146,7 +149,10 @@ namespace UI.UserControls.Settings
             }
 
             Group activeGroup = GroupManager.GetGroup(activeGroupId);
-            SelectedGroupNameTextBox.Text = activeGroup.Name;
+            if (activeGroup != null)
+            {
+                SelectedGroupNameTextBox.Text = activeGroup.Name;
+            }
 
             InitAttributes();
         }
@@ -281,25 +287,30 @@ namespace UI.UserControls.Settings
 
         private void UpdateAttributes(int selectedAttributeId)
         {
-            activeAttributeId = selectedAttributeId;
-            foreach (GroupAttributeSettingsItem item in AttributesStackPanel.Children)
-            {
-                item.ChangeColorMode(item.Id == activeAttributeId);
-            }
+            NoAttributesGrid.Visibility = activeAttributeId == -1 ? Visibility.Visible : Visibility.Hidden;
 
-            GroupAttribute activeAttribute = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId);
-            if (activeAttribute != null)
+            if (activeAttributeId != -1)
             {
-                fieldsViewModel.AttributeName = SelectedAttributeNameTextBox.Text = activeAttribute.Name;
-                SelectedAttributeLineWidthTextBox.Text = activeAttribute.LineWidth.ToString();
-                fieldsViewModel.LineWidth = activeAttribute.LineWidth;
-                SelectedAttributeColorPicker.Color = activeAttribute.ColorCode.ConvertColor();
-            }
+                activeAttributeId = selectedAttributeId;
+                foreach (GroupAttributeSettingsItem item in AttributesStackPanel.Children)
+                {
+                    item.ChangeColorMode(item.Id == activeAttributeId);
+                }
 
-            // change group settings item background color if empty
-            foreach (GroupSettingsItem item in GroupsStackPanel.Children)
-            {
-                item.ChangeBackgroundColor(GroupManager.GetGroup(item.Id).Attributes.Count == 0);
+                GroupAttribute activeAttribute = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId);
+                if (activeAttribute != null)
+                {
+                    fieldsViewModel.AttributeName = SelectedAttributeNameTextBox.Text = activeAttribute.Name;
+                    SelectedAttributeLineWidthTextBox.Text = activeAttribute.LineWidth.ToString();
+                    fieldsViewModel.LineWidth = activeAttribute.LineWidth;
+                    SelectedAttributeColorPicker.Color = activeAttribute.ColorCode.ConvertColor();
+                }
+
+                // change group settings item background color if empty
+                foreach (GroupSettingsItem item in GroupsStackPanel.Children)
+                {
+                    item.ChangeBackgroundColor(GroupManager.GetGroup(item.Id).Attributes.Count == 0);
+                }
             }
         }
 

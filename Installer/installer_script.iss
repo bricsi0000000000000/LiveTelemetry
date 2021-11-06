@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Race Car Telemetry"
-#define MyAppVersion "5.0"
+#define MyAppVersion "5.1"
 #define MyAppPublisher "Bólya Richárd"
 #define MyAppURL "http://richard.bolya.eu/"
 #define MyAppExeName "UI.exe"
@@ -13,7 +13,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{1EFEA8B1-3922-4A38-8D29-ADF3DD755777}
+AppId={{630A42E0-F071-48A3-A0FD-FC744979A394}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -24,6 +24,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\RaceCarTelemetry
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
+LicenseFile=D:\programming\c#\thesis\LiveTelemetry\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputBaseFilename=RaceCarTelemetrySetup

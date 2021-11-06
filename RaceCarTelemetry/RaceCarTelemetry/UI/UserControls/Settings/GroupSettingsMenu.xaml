@@ -126,6 +126,11 @@
                                          Click="DeleteAttributeCardButton_Click"
                                          />
             </Grid>
+
+            <custom:EmptyPanel x:Name="NoGroupsGrid"
+                               Grid.RowSpan="5"
+                               Visibility="Visible"
+                               Kind="FormatListBulleted"/>
         </Grid>
 
         <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
@@ -213,7 +218,7 @@
 
             <custom:EmptyPanel x:Name="NoAttributesGrid"
                                Grid.RowSpan="5"
-                               Visibility="Hidden"
+                               Visibility="Visible"
                                Kind="FormatListBulleted"/>
         </Grid>
 

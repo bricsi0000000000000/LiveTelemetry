@@ -171,23 +171,26 @@ namespace UI.UserControls.Settings
 
         private void UpdateCharts()
         {
-            if (canUpdateCharts)
+            if (activeTemplateId != -1)
             {
-                charts.Clear();
-
-                foreach (string name in PageTemplateManager.GetPageTemplate(activeTemplateId).GroupNames)
+                if (canUpdateCharts)
                 {
-                    PageTemplateChartSettingsItem chart = new PageTemplateChartSettingsItem(name, chartIndex++, MoveUp, MoveDown);
-                    charts.Add(chart);
-                }
+                    charts.Clear();
 
-                foreach (string name in PageTemplateManager.GetPageTemplate(activeTemplateId).SensorNames)
-                {
-                    PageTemplateChartSettingsItem chart = new PageTemplateChartSettingsItem(name, chartIndex++, MoveUp, MoveDown);
-                    charts.Add(chart);
-                }
+                    foreach (string name in PageTemplateManager.GetPageTemplate(activeTemplateId).GroupNames)
+                    {
+                        PageTemplateChartSettingsItem chart = new PageTemplateChartSettingsItem(name, chartIndex++, MoveUp, MoveDown);
+                        charts.Add(chart);
+                    }
 
-                RearrangeCharts();
+                    foreach (string name in PageTemplateManager.GetPageTemplate(activeTemplateId).SensorNames)
+                    {
+                        PageTemplateChartSettingsItem chart = new PageTemplateChartSettingsItem(name, chartIndex++, MoveUp, MoveDown);
+                        charts.Add(chart);
+                    }
+
+                    RearrangeCharts();
+                }
             }
         }
 
@@ -271,6 +274,8 @@ namespace UI.UserControls.Settings
             }
 
             updateLiveMenuCharts();
+
+            UpdateCoverGrid();
         }
 
         private void UpdatePageTemplates(int selectedTemplateId)
@@ -353,23 +358,28 @@ namespace UI.UserControls.Settings
 
         private void DeletePageTemplateCardButton_Click(object sender, RoutedEventArgs e)
         {
-            PageTemplateManager.RemovePageTemplate(activeTemplateId, out string errorMessage);
-
-            if (!string.IsNullOrEmpty(errorMessage))
+            if (activeTemplateId != -1)
             {
-                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
+                PageTemplateManager.RemovePageTemplate(activeTemplateId, out string errorMessage);
+
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
+                }
+
+                if (PageTemplateManager.PageTemplates.Any())
+                {
+                    activeTemplateId = PageTemplateManager.PageTemplates.First().Id;
+                }
+                else
+                {
+                    activeTemplateId = -1;
+                }
+
+                InitializePageTemplates();
             }
 
-            if (PageTemplateManager.PageTemplates.Any())
-            {
-                activeTemplateId = PageTemplateManager.PageTemplates.First().Id;
-            }
-            else
-            {
-                activeTemplateId = -1;
-            }
-
-            InitializePageTemplates();
+            UpdateCoverGrid();
         }
 
         private void AddPageTemplatePopUpCardButton_Click(object sender, RoutedEventArgs e)
@@ -467,6 +477,11 @@ namespace UI.UserControls.Settings
                 Save();
                 InitializeSensorNames();
             }
+        }
+
+        private void UpdateCoverGrid()
+        {
+            NoPageTemplatesGrid.Visibility = activeTemplateId == -1 ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }
