@@ -836,26 +836,35 @@ namespace UI.UserControls.Live
 
         private void PageTemplatesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PageTemplate selectedTemplate = PageTemplateManager.GetPageTemplate(PageTemplatesComboBox.SelectedItem.ToString());
-            selectedPageTemplateId = selectedTemplate.Id;
-
-            foreach (object item in SensorsStackPanel.Children)
+            object selected = PageTemplatesComboBox.SelectedItem;
+            if (selected != null)
             {
-                if (item is CheckBox checkBox)
-                {
-                    checkBox.IsChecked = selectedTemplate.SensorNames.Contains(checkBox.Content.ToString());
-                }
-            }
+                PageTemplate selectedTemplate = PageTemplateManager.GetPageTemplate(selected.ToString());
+                selectedPageTemplateId = selectedTemplate.Id;
 
-            foreach (object item in GroupsStackPanel.Children)
-            {
-                if (item is CheckBox checkBox)
+                foreach (object item in SensorsStackPanel.Children)
                 {
-                    checkBox.IsChecked = selectedTemplate.GroupNames.Contains(checkBox.Content.ToString());
+                    if (item is CheckBox checkBox)
+                    {
+                        checkBox.IsChecked = selectedTemplate.SensorNames.Contains(checkBox.Content.ToString());
+                    }
                 }
-            }
 
-            BuildCharts();
+                foreach (object item in GroupsStackPanel.Children)
+                {
+                    if (item is CheckBox checkBox)
+                    {
+                        checkBox.IsChecked = selectedTemplate.GroupNames.Contains(checkBox.Content.ToString());
+                    }
+                }
+
+                BuildCharts();
+            }
+        }
+
+        private void ClearPageTemplateButton_Click(object sender, RoutedEventArgs e)
+        {
+            PageTemplatesComboBox.SelectedItem = null;
         }
     }
 }

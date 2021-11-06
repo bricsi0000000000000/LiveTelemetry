@@ -25,11 +25,25 @@
                 <RowDefinition Height=".2*" />
             </Grid.RowDefinitions>
 
-            <ComboBox x:Name="PageTemplatesComboBox"
-                      Margin="10,5,5,0"
-                      SelectionChanged="PageTemplatesComboBox_SelectionChanged"
-                      materialDesign:HintAssist.IsFloating="True"
-                      materialDesign:HintAssist.Hint="Template"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+                
+                <ComboBox x:Name="PageTemplatesComboBox"
+                          Margin="10,5,5,5"
+                          SelectionChanged="PageTemplatesComboBox_SelectionChanged"
+                          materialDesign:HintAssist.IsFloating="True"
+                          materialDesign:HintAssist.Hint="Template"
+                          materialDesign:ComboBoxAssist.ClassicMode="True"
+                          />
+                
+                <custom:ImageCardButtonWithoutShadow Grid.Column="1"
+                                                     x:Name="ClearPageTemplateButton"
+                                                     Kind="Close"
+                                                     Click="ClearPageTemplateButton_Click"/>
+            </Grid>
 
             <materialDesign:Card Grid.Row="1"
                                  Margin="5,5,0,0">
