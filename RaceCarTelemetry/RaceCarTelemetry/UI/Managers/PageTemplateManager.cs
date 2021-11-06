@@ -88,5 +88,15 @@ namespace UI.Managers
         {
             pageTemplateBusinessLogic.SavePageTemplates(PageTemplates, out errorMessage);
         }
+
+        public static void DeleteAllChartFromTemplates(out string errorMessage)
+        {
+            foreach (PageTemplate template in PageTemplates)
+            {
+                template.Charts.Clear();
+            }
+
+            SavePageTemplates(out errorMessage);
+        }
     }
 }

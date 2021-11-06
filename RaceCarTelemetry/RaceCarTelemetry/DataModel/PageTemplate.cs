@@ -76,5 +76,19 @@ namespace DataModel
         {
             return SensorNames.Find(x => x == name) != null;
         }
+
+        public PageTemplateChart GetChart(string chartName)
+        {
+            return Charts.Find(x => x.Name == chartName);
+        }
+
+        public void RemoveChart(string chartName)
+        {
+            if (GetChart(chartName) != null)
+            {
+                int index = Charts.FindIndex(x => x.Name == chartName);
+                Charts.RemoveAt(index);
+            }
+        }
     }
 }
