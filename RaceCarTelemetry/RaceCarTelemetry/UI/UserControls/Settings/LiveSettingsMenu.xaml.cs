@@ -43,7 +43,7 @@ namespace UI.UserControls.Settings
 
         public delegate void ChangeSelectedSession(int selectedSessionId);
 
-        public LiveSettingsMenu(UpdateLiveMenu updateLiveMenu, FinishedReadingConfiguration finishedReadingConfiguration)
+        public LiveSettingsMenu(UpdateLiveMenu updateLiveMenu)
         {
             InitializeComponent();
 
@@ -57,31 +57,24 @@ namespace UI.UserControls.Settings
             configurationBusinessLogic = new ConfigurationBusinessLogic();
             liveBusinessLogic = new LiveBusinessLogic();
 
-            UpdateCarStatus();
-
             SessionDataGridCover.Visibility = Visibility.Visible;
 
             fieldsViewModel.SessionName = "placeholder";
             DataContext = fieldsViewModel;
+        }
 
-            LoadLiveConfiguration();
-
+        public void AfterConfigurationIsLoaded()
+        {
             if (ConfigurationManager.Configuration != null)
             {
-                finishedReadingConfiguration();
-
-                InitilaizeHttpClient();
-                HealthCheck();
+                AfterConfigurationIsUpdated();
             }
         }
 
-        private void LoadLiveConfiguration()
+        public void AfterConfigurationIsUpdated()
         {
-            ConfigurationManager.Configuration = configurationBusinessLogic.LoadLiveConfiguration(FilePathManager.ConfigurationFilePath, out string errorMessage);
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error, className: nameof(LiveSettingsMenu), exceptionMessage: errorMessage);
-            }
+            InitilaizeHttpClient();
+            HealthCheck();
         }
 
         private async void HealthCheck()
@@ -500,29 +493,6 @@ namespace UI.UserControls.Settings
             {
                 UpdateLoadingGrid(visibility: false);
                 ErrorManager.ShowMessage($"Can't add {sessionName} because can't connect to the server", MessageSnackbar, MessageType.Error);
-            }
-        }
-
-        /// <param name="sentTime">Time when the package was sent from the data sender</param>
-        /// <param name="arrivedTime">Time when the package was sent from the server</param>
-        public void UpdateCarStatus(TimeSpan? sentTime = null, long? arrivedTime = null)
-        {
-            if (sentTime != null)
-            {
-                CarToDBConnectionSpeedLabel.Content = $"{sentTime.Value.Milliseconds:f0} ms";
-            }
-            else
-            {
-                CarToDBConnectionSpeedLabel.Content = "-";
-            }
-
-            if (arrivedTime != null)
-            {
-                DBToAppConnectionSpeedLabel.Content = $"{(long)arrivedTime:f0} ms";
-            }
-            else
-            {
-                DBToAppConnectionSpeedLabel.Content = "-";
             }
         }
 

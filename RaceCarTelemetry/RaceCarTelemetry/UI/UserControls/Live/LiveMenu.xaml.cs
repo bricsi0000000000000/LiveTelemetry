@@ -59,7 +59,6 @@ namespace UI.UserControls.Live
         private double stickRangeSliderUpperValue;
         private double stickRangeSliderLowerValue;
 
-        public UpdateLiveSettingsCarStatus UpdateCarStatus { get; set; }
         public InitializeGroups InitGroups { get; set; }
         public bool CanUpdateCharts { get; private set; }
         public bool IsSelectedSession { get; set; }
@@ -342,8 +341,6 @@ namespace UI.UserControls.Live
             {
                 if (IsSelectedSession)
                 {
-                    //PlayImageCardButton.Background = ColorManager.Secondary100.ConvertBrush();
-
                     if (activeSession.IsLive)
                     {
                         CanUpdateCharts = !CanUpdateCharts;
@@ -361,8 +358,6 @@ namespace UI.UserControls.Live
                     }
                     else
                     {
-                        //InputFileManager.SaveFile(activeSession.Name);
-                        UpdateCarStatus();
                     }
 
                     UpdateRecieveDataStatus();
@@ -437,14 +432,6 @@ namespace UI.UserControls.Live
                         lastPackageId = sensorValues.Last().PackageId;
 
                         getDataSignal.Set();
-
-                        if (activeSession.IsLive)
-                        {
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                //MenuManager.LiveSettings.UpdateCarStatus(sensorValues.First().SentTime, stopwatch.ElapsedMilliseconds);
-                            });
-                        }
                     }
 
                     Application.Current.Dispatcher.Invoke(() =>

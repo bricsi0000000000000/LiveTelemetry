@@ -35,7 +35,6 @@ namespace UI.Managers
                                                          new FinishedReadingConfiguration(liveMenu.InitilaizeHttpClient),
                                                          new FinishedReadingPageTemplates(liveMenu.InitializePageTemplates));
 
-            liveMenu.UpdateCarStatus = new UpdateLiveSettingsCarStatus(settingsMenu.LiveSettingsMenu.UpdateCarStatus);
             liveMenu.InitGroups = new InitializeGroups(settingsMenu.GroupSettingsMenu.InitializeGroups);
 
             AddMenuTab(TextManager.SETTINGS_MENU, settingsMenu, tabControl, selected: true);

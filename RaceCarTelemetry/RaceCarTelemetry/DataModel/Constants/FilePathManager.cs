@@ -13,6 +13,15 @@ namespace DataModel.Constants
             }
         }
 
+        public static string ApiConfigurationFilePath
+        {
+            get
+            {
+                return TextManager.API_CONFIGURATION_FILE.MakePath(TextManager.CONFIGURATION_FILES_FOLDER);
+                //return TextManager.API_CONFIGURATION_FILE;
+            }
+        }
+
         public static string LogFilePath
         {
             get
