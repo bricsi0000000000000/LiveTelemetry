@@ -49,6 +49,11 @@ namespace DataAccess
                 }
             }
 
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                configuration = null;
+            }
+
             return configuration;
         }
     }
