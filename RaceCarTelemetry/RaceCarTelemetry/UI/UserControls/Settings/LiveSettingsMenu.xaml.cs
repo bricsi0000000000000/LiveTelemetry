@@ -34,9 +34,16 @@ namespace UI.UserControls.Settings
         private int selectedSessionId;
         private bool gettingsHealthCheck;
 
+        private enum ConfirmPopupStates
+        {
+            DeleteSession,
+            ChangeSessionState
+        }
+        private ConfirmPopupStates confirmPopupStates;
+
         public delegate void ChangeSelectedSession(int selectedSessionId);
 
-        public LiveSettingsMenu(UpdateLiveMenu updateLiveMenu, FinishedReadingConfiguration finishedReadingConfiguration)
+        public LiveSettingsMenu(UpdateLiveMenu updateLiveMenu)
         {
             InitializeComponent();
 
@@ -47,34 +54,27 @@ namespace UI.UserControls.Settings
             sessions = new List<LiveSession>();
             gettingsHealthCheck = false;
 
-            UpdateCarStatus();
+            configurationBusinessLogic = new ConfigurationBusinessLogic();
+            liveBusinessLogic = new LiveBusinessLogic();
 
             SessionDataGridCover.Visibility = Visibility.Visible;
 
             fieldsViewModel.SessionName = "placeholder";
             DataContext = fieldsViewModel;
+        }
 
-            configurationBusinessLogic = new ConfigurationBusinessLogic();
-            liveBusinessLogic = new LiveBusinessLogic();
-
-            LoadLiveConfiguration();
-
+        public void AfterConfigurationIsLoaded()
+        {
             if (ConfigurationManager.Configuration != null)
             {
-                finishedReadingConfiguration();
-
-                InitilaizeHttpClient();
-                HealthCheck();
+                AfterConfigurationIsUpdated();
             }
         }
 
-        private void LoadLiveConfiguration()
+        public void AfterConfigurationIsUpdated()
         {
-            ConfigurationManager.Configuration = configurationBusinessLogic.LoadLiveConfiguration(FilePathManager.ConfigurationFilePath, out string errorMessage);
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                ErrorManager.ShowErrorMessage(errorMessage, ErrorSnackbar, nameof(LiveSettingsMenu), errorMessage);
-            }
+            InitilaizeHttpClient();
+            HealthCheck();
         }
 
         private async void HealthCheck()
@@ -91,7 +91,7 @@ namespace UI.UserControls.Settings
             }
             catch (Exception exception)
             {
-                ErrorManager.ShowErrorMessage("Could not connect to the server", ErrorSnackbar, nameof(LiveSettingsMenu), exception.Message);
+                ErrorManager.ShowMessage("Could not connect to the server", MessageSnackbar, MessageType.Error, className: nameof(LiveSettingsMenu), exceptionMessage: exception.Message);
             }
 
             ServerStatusIcon.Visibility = Visibility.Visible;
@@ -121,17 +121,17 @@ namespace UI.UserControls.Settings
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(ApiCallManager.HTTP_CLIENT_HEADER_TYPE));
         }
 
-        private void RefreshSessionsButton_Click(object sender, RoutedEventArgs e)
+        private async void RefreshSessionsButton_Click(object sender, RoutedEventArgs e)
         {
             if (client != null)
             {
                 UpdateLoadingGrid(visibility: true, "Loading sessions from the server..");
 
-                GetAllSessions(selectedSessionId);
+                await GetAllSessions(selectedSessionId);
             }
             else
             {
-                ErrorManager.ShowErrorMessage("Load ConfigurationManager.Configuration first", ErrorSnackbar, nameof(LiveSettingsMenu));
+                ErrorManager.ShowMessage("Configurations are not loaded", MessageSnackbar, MessageType.Error, className: nameof(LiveSettingsMenu));
             }
         }
 
@@ -144,7 +144,7 @@ namespace UI.UserControls.Settings
             LoadingLabel.Content = message;
         }
 
-        private async void GetAllSessions(int selectedSessionId = -1)
+        private async Task GetAllSessions(int selectedSessionId = -1)
         {
             try
             {
@@ -153,7 +153,7 @@ namespace UI.UserControls.Settings
             }
             catch (Exception exception)
             {
-                ErrorManager.ShowErrorMessage("There was a problem getting the live sessions", ErrorSnackbar, nameof(LiveSettingsMenu), exception.Message);
+                ErrorManager.ShowMessage("There was a problem getting the live sessions", MessageSnackbar, MessageType.Error, className: nameof(LiveSettingsMenu), exceptionMessage: exception.Message);
                 UpdateServerStatusIcon(connected: false);
                 UpdateLoadingGrid(visibility: false);
 
@@ -173,7 +173,7 @@ namespace UI.UserControls.Settings
             }
             else
             {
-                ErrorManager.ShowMessage("There are no sessions on the server", ErrorSnackbar);
+                ErrorManager.ShowMessage("There are no sessions on the server", MessageSnackbar, MessageType.Info);
                 SessionDataGridCover.Visibility = Visibility.Visible;
 
                 selectedSessionId = -1;
@@ -229,7 +229,7 @@ namespace UI.UserControls.Settings
             }
             catch (Exception exception)
             {
-                ErrorManager.ShowErrorMessage($"There was a problem getting the sensors of {selectedSession.Name}", ErrorSnackbar, nameof(LiveSettingsMenu), exception.Message);
+                ErrorManager.ShowMessage($"There was a problem getting the sensors of {selectedSession.Name}", MessageSnackbar, MessageType.Error, className: nameof(LiveSettingsMenu), exceptionMessage: exception.Message);
                 UpdateServerStatusIcon(connected: false);
             }
 
@@ -279,7 +279,7 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
                 SelectedSessionNameTextBox.Text = session.Name;
-                ErrorManager.ShowMessage("Name can not be empty", ErrorSnackbar, isError: true);
+                ErrorManager.ShowMessage("Name can not be empty", MessageSnackbar, MessageType.Error);
             }
             else
             {
@@ -293,17 +293,19 @@ namespace UI.UserControls.Settings
                     if (resultCode == (int)HttpStatusCode.OK)
                     {
                         FillSessionsStackPanel();
+
+                        updateLiveMenu(session);
                     }
                     else
                     {
-                        ErrorManager.ShowErrorMessage("Couldn't update session", ErrorSnackbar, nameof(LiveSettingsMenu), $"Result code: {resultCode}");
+                        ErrorManager.ShowMessage("Couldn't update session", MessageSnackbar, MessageType.Error, className: nameof(LiveSettingsMenu), $"Result code: {resultCode}");
                     }
 
                     UpdateServerStatusIcon(connected: true);
                 }
                 catch (Exception exception)
                 {
-                    ErrorManager.ShowErrorMessage("Couldn't update session", ErrorSnackbar, nameof(LiveSettingsMenu), exception.Message);
+                    ErrorManager.ShowMessage("Couldn't update session", MessageSnackbar, MessageType.Error, className: nameof(LiveSettingsMenu), exception.Message);
                     UpdateServerStatusIcon(connected: false);
                 }
 
@@ -312,11 +314,25 @@ namespace UI.UserControls.Settings
             }
         }
 
-        private async void ChangeSessionStatusCardButton_Click(object sender, RoutedEventArgs e)
+        private void ChangeSessionStatusCardButton_Click(object sender, RoutedEventArgs e)
+        {
+            LiveSession selectedSession = GetSelectedSession;
+
+            if (selectedSession.IsLive)
+            {
+                confirmPopupStates = ConfirmPopupStates.ChangeSessionState;
+                ConfirmPopupGrid.Visibility = Visibility.Visible;
+                ConfirmPopupText.Text = "You are in an active session.\nAre you sure to change it to offline?";
+            }
+            else
+            {
+                ChangeSessionStatus(selectedSession);
+            }
+        }
+
+        private async void ChangeSessionStatus(LiveSession selectedSession)
         {
             UpdateLoadingGrid(visibility: true);
-
-            LiveSession selectedSession = GetSelectedSession;
 
             try
             {
@@ -330,13 +346,15 @@ namespace UI.UserControls.Settings
                     apiCall = ConfigurationManager.Configuration.GetApiCall(ApiCallManager.CHANGE_SESSION_TO_LIVE);
                 }
 
-                int resultCode = await liveBusinessLogic.ChangeSessionState(client, !selectedSession.IsLive, selectedSession.SessionId, apiCall);
+                int resultCode = await liveBusinessLogic.ChangeSessionState(client, selectedSession.SessionId, apiCall);
 
                 if (resultCode == (int)HttpStatusCode.OK)
                 {
                     selectedSession.IsLive = !selectedSession.IsLive;
 
                     ChangeSessionStatus(selectedSession.SessionId, selectedSession.IsLive);
+
+                    updateLiveMenu(selectedSession);
 
                     UpdateLoadingGrid(visibility: false);
 
@@ -345,19 +363,19 @@ namespace UI.UserControls.Settings
                 else if (resultCode == (int)HttpStatusCode.Conflict)
                 {
                     UpdateLoadingGrid(visibility: false);
-                    ErrorManager.ShowMessage("Only one live session can be at a time!", ErrorSnackbar);
+                    ErrorManager.ShowMessage("Only one live session can be at a time!", MessageSnackbar, MessageType.Error);
                 }
                 else
                 {
                     UpdateLoadingGrid(visibility: false);
                     ErrorManager.ShowMessage($"Couldn't update {selectedSession.Name}'s status from " +
                                              $"{(selectedSession.IsLive ? "live" : "offline")} to " +
-                                             $"{(!selectedSession.IsLive ? "live" : "offline")}", ErrorSnackbar);
+                                             $"{(!selectedSession.IsLive ? "live" : "offline")}", MessageSnackbar, MessageType.Error);
                 }
             }
             catch (Exception exception)
             {
-                ErrorManager.ShowErrorMessage($"There was an error updating {selectedSession.Name}", ErrorSnackbar, nameof(LiveSettingsMenu), exception.Message);
+                ErrorManager.ShowMessage($"There was an error updating {selectedSession.Name}", MessageSnackbar, MessageType.Error, className: nameof(LiveSettingsMenu), exceptionMessage: exception.Message);
                 UpdateServerStatusIcon(connected: false);
                 UpdateLoadingGrid(visibility: false);
             }
@@ -380,7 +398,14 @@ namespace UI.UserControls.Settings
             }
         }
 
-        private async void DeleteSessionCardButton_Click(object sender, RoutedEventArgs e)
+        private void DeleteSessionCardButton_Click(object sender, RoutedEventArgs e)
+        {
+            confirmPopupStates = ConfirmPopupStates.DeleteSession;
+            ConfirmPopupGrid.Visibility = Visibility.Visible;
+            ConfirmPopupText.Text = $"Are you sure to delete session '{SelectedSessionNameTextBox.Text}'?";
+        }
+
+        private async void DeleteSession()
         {
             UpdateLoadingGrid(visibility: true, "Deleting session..");
 
@@ -390,18 +415,19 @@ namespace UI.UserControls.Settings
                 if (resultCode == (int)HttpStatusCode.OK)
                 {
                     UpdateLoadingGrid(visibility: false);
-                    GetAllSessions(selectedSessionId);
+                    await GetAllSessions(selectedSessionId);
+                    updateLiveMenu(GetSelectedSession);
                 }
                 else
                 {
                     UpdateLoadingGrid(visibility: false);
-                    ErrorManager.ShowErrorMessage("Couldn't delete session", ErrorSnackbar);
+                    ErrorManager.ShowMessage("Couldn't delete session", MessageSnackbar, MessageType.Error);
                 }
             }
             catch (Exception)
             {
                 UpdateLoadingGrid(visibility: false);
-                ErrorManager.ShowErrorMessage("Can't delete session because can't connect to the server", ErrorSnackbar);
+                ErrorManager.ShowMessage("Can't delete session because can't connect to the server", MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -449,48 +475,45 @@ namespace UI.UserControls.Settings
                 int resultCode = await liveBusinessLogic.AddSession(client, new LiveSession { Name = sessionName, Date = DateTime.Now }, ConfigurationManager.Configuration.GetApiCall(ApiCallManager.POST_NEW_SESSION));
                 if (resultCode == (int)HttpStatusCode.OK)
                 {
-                    GetAllSessions();
+                    await GetAllSessions();
                     UpdateLoadingGrid(visibility: false);
                 }
                 else if (resultCode == (int)HttpStatusCode.Conflict)
                 {
                     UpdateLoadingGrid(visibility: false);
-                    ErrorManager.ShowErrorMessage($"There is already a session called {sessionName}", ErrorSnackbar);
+                    ErrorManager.ShowMessage($"There is already a session called {sessionName}", MessageSnackbar, MessageType.Error);
                 }
                 else
                 {
                     UpdateLoadingGrid(visibility: false);
-                    ErrorManager.ShowErrorMessage("There was a problem with the server", ErrorSnackbar);
+                    ErrorManager.ShowMessage("There was a problem with the server", MessageSnackbar, MessageType.Error);
                 }
             }
             catch (Exception)
             {
                 UpdateLoadingGrid(visibility: false);
-                ErrorManager.ShowErrorMessage($"Can't add {sessionName} because can't connect to the server", ErrorSnackbar);
+                ErrorManager.ShowMessage($"Can't add {sessionName} because can't connect to the server", MessageSnackbar, MessageType.Error);
             }
         }
 
-        /// <param name="sentTime">Time when the package was sent from the data sender</param>
-        /// <param name="arrivedTime">Time when the package was sent from the server</param>
-        public void UpdateCarStatus(TimeSpan? sentTime = null, long? arrivedTime = null)
+        private void CancelPopUpCardButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sentTime != null)
+            ConfirmPopupGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void ConfirmPopUpCardButton_Click(object sender, RoutedEventArgs e)
+        {
+            switch (confirmPopupStates)
             {
-                CarToDBConnectionSpeedLabel.Content = $"{sentTime.Value.Milliseconds:f0} ms";
-            }
-            else
-            {
-                CarToDBConnectionSpeedLabel.Content = "-";
+                case ConfirmPopupStates.DeleteSession:
+                    DeleteSession();
+                    break;
+                case ConfirmPopupStates.ChangeSessionState:
+                    ChangeSessionStatus(GetSelectedSession);
+                    break;
             }
 
-            if (arrivedTime != null)
-            {
-                DBToAppConnectionSpeedLabel.Content = $"{(long)arrivedTime:f0} ms";
-            }
-            else
-            {
-                DBToAppConnectionSpeedLabel.Content = "-";
-            }
+            ConfirmPopupGrid.Visibility = Visibility.Hidden;
         }
     }
 }

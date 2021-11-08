@@ -9,7 +9,7 @@ namespace UI.ValidationRules
         {
             if (string.IsNullOrWhiteSpace((value ?? "").ToString()))
             {
-                return new ValidationResult(false, "Field is required.");
+                return new ValidationResult(false, "Field is required");
             }
             else
             {
@@ -21,12 +21,12 @@ namespace UI.ValidationRules
                     }
                     else
                     {
-                        return new ValidationResult(false, "Must be bigger than 0.");
+                        return new ValidationResult(false, "Must be bigger than 0");
                     }
                 }
                 else
                 {
-                    return new ValidationResult(false, "Number is required.");
+                    return new ValidationResult(false, "Number is required");
                 }
             }
         }

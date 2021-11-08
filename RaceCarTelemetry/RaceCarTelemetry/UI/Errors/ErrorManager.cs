@@ -1,35 +1,58 @@
-﻿using DataModel.Constants;
+﻿using BusinessLogic;
 using MaterialDesignThemes.Wpf;
 using System;
-using System.IO;
+using UI.Extensions;
 using UI.Managers;
 
 namespace UI.Errors
 {
+    public enum MessageType
+    {
+        Error,
+        Info
+    }
+
     public static class ErrorManager
     {
-        /// <param name="className">The name of the class where the message comes</param>
-        /// <param name="errorMessage">This will only be written in log</param>
-        public static void ShowErrorMessage(string message, Snackbar snackbar, string className = "", string errorMessage = "")
+        private static ErrorManagerBusinessLogic errorManagerBusinessLogic;
+        private static bool isInitialized = false;
+        public static void Initialize()
         {
-            ShowMessage(message, snackbar, className, isError: true, errorMessage);
+            errorManagerBusinessLogic = new ErrorManagerBusinessLogic();
+            isInitialized = true;
         }
 
-        public static void ShowMessage(string message, Snackbar snackbar, string className = "", bool isError = true, string errorMessage = "")
+        public static void ShowMessage(string message, Snackbar snackbar, MessageType type, string className = "", string exceptionMessage = "")
         {
-            if (isError)
+            CheckIfInitialized();
+
+            switch (type)
             {
-                WriteLog(message, className, errorMessage);
+                case MessageType.Error:
+                    WriteLog(message, className, exceptionMessage);
+                    snackbar.Background = ColorManager.Error;
+                    break;
+                case MessageType.Info:
+                    snackbar.Background = ColorManager.Secondary.ConvertBrush();
+                    break;
             }
 
-            snackbar.Background = isError ? ColorManager.Error : ColorManager.Message;
             snackbar.MessageQueue.Enqueue(message);
         }
 
-        private static void WriteLog(string message, string className, string errorMessage = "")
+        public static void WriteLog(string message, string className, string errorMessage = "")
         {
-            using StreamWriter writer = new StreamWriter(FilePathManager.LogFilePath, append: true);
-            writer.WriteLine($"[{DateTime.Now}]: {className}\t{message}\t{errorMessage}");
+            CheckIfInitialized();
+
+            errorManagerBusinessLogic.WriteLog(message, className, errorMessage);
+        }
+
+        private static void CheckIfInitialized()
+        {
+            if (!isInitialized)
+            {
+                throw new Exception("Error manager is not initialized");
+            }
         }
     }
 }

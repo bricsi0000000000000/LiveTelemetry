@@ -19,8 +19,6 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Grid>
@@ -128,6 +126,11 @@
                                          Click="DeleteAttributeCardButton_Click"
                                          />
             </Grid>
+
+            <custom:EmptyPanel x:Name="NoGroupsGrid"
+                               Grid.RowSpan="5"
+                               Visibility="Visible"
+                               Kind="FormatListBulleted"/>
         </Grid>
 
         <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
@@ -215,41 +218,9 @@
 
             <custom:EmptyPanel x:Name="NoAttributesGrid"
                                Grid.RowSpan="5"
-                               Visibility="Hidden"
+                               Visibility="Visible"
                                Kind="FormatListBulleted"/>
         </Grid>
-
-        <GridSplitter Grid.Column="5" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
-
-        <Grid Grid.Column="6"
-                Margin="5,0,5,5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="3*"/>
-            </Grid.RowDefinitions>
-
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Auto"
-                          Margin="5"
-                          >
-                <StackPanel x:Name="InputFilesStackPanel"/>
-            </ScrollViewer>
-
-            <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
-
-            <ScrollViewer Grid.Row="2"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Auto"
-                          Margin="5"
-                          >
-                <StackPanel x:Name="ChannelsStackPanel"/>
-            </ScrollViewer>
-        </Grid>
-
-        <custom:EmptyPanel x:Name="NoInputFilesGrid"
-                           Grid.Column="6"
-                           Kind="FileMultiple"/>
 
         <Grid Name="PopUpBackground"
               Grid.ColumnSpan="7"
@@ -390,7 +361,7 @@
 
         <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}"
                                  Grid.ColumnSpan="7"
-                                 x:Name="ErrorSnackbar"
+                                 x:Name="MessageSnackbar"
                                  Foreground="White"
                                  />
     </Grid>

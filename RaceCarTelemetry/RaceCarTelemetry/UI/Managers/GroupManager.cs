@@ -24,12 +24,17 @@ namespace UI.Managers
             return Groups.Find(x => x.Id == id);
         }
 
+        public static Group GetGroup(string name)
+        {
+            return Groups.Find(x => x.Name.Equals(name));
+        }
+
         private static bool IsGroupExists(int groupId)
         {
             return GetGroup(groupId) != null;
         }
 
-        private static bool IsGroupExists(string name)
+        public static bool IsGroupExists(string name)
         {
             return Groups.Find(x => x.Name.Equals(name)) != null;
         }
@@ -154,6 +159,17 @@ namespace UI.Managers
         private static void SaveGroups(out string errorMessage)
         {
             groupBusinessLogic.SaveGroups(Groups, out errorMessage);
+        }
+
+        public static Group MakeGroupWithAttributes(string chartName, List<string> sensorNames)
+        {
+            Group newGroup = new Group(LastGroupId++, chartName);
+            foreach (string name in sensorNames)
+            {
+                newGroup.AddAttribute(name, ColorManager.GetChartColor.ToString(), 1);
+            }
+
+            return newGroup;
         }
     }
 }

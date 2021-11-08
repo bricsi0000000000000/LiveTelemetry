@@ -1,0 +1,268 @@
+﻿<UserControl x:Class="UI.UserControls.Settings.PageTemplateSettingsMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:validation="clr-namespace:UI.ValidationRules"
+             xmlns:custom="clr-namespace:UI.CustomControls"
+             mc:Ignorable="d"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignBackground}"
+             d:DataContext="{d:DesignInstance validation:FieldsViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="45"/>
+            </Grid.RowDefinitions>
+
+            <ScrollViewer Margin="5,5,0,5"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto">
+                <StackPanel x:Name="PageTemplatesStackPanel"
+                            Margin="0,0,0,5"
+                            />
+            </ScrollViewer>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <custom:ImageCardButton Margin="5,5,2.5,5"
+                                        x:Name="AddPageTemplateCardButton"
+                                        Click="AddPageTemplateCardButton_Click"
+                                        Kind="BookPlus"/>
+
+                <custom:DeleteCardButton Grid.Column="1"
+                                         Margin="2.5,5,5,5"
+                                         x:Name="DeletePageTemplateCardButton"
+                                         Click="DeletePageTemplateCardButton_Click"
+                                         />
+            </Grid>
+        </Grid>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="65"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="45"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Name="SelectedPageTemplateNameTextBox"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            HorizontalContentAlignment="Left"
+                            materialDesign:HintAssist.Hint="Template name"
+                            materialDesign:HintAssist.IsFloating="True"
+                            Margin="5,0,0,15"
+                            >
+                    <TextBox.Text>
+                        <Binding Path="PageTemplateName"
+                                 UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validation:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <custom:ImageCardButtonWithoutShadow Grid.Column="1"
+                                                     x:Name="ChangeSelectedPageNameCardButton"
+                                                     Margin="5,10"
+                                                     Kind="ContentSave"
+                                                     Click="ChangeSelectedPageNameCardButton_Click"
+                                                     />
+
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" 
+                          Margin="0,5,0,0"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto"
+                          >
+                <StackPanel x:Name="SensorsStackPanel"
+                            Margin="0,0,0,5"
+                            />
+            </ScrollViewer>
+
+            <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
+
+            <ScrollViewer Grid.Row="3"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto"
+                          >
+                <StackPanel x:Name="GroupsStackPanel"
+                            Margin="5,0,0,5"
+                            />
+            </ScrollViewer>
+
+            <Grid Grid.Row="4">
+                <custom:ImageCardButton Margin="5,5,2.5,5"
+                                        x:Name="AddSensorNameCardButton"
+                                        Click="AddSensorNameCardButton_Click"
+                                        Kind="PlaylistAdd"
+                                        />
+            </Grid>
+        </Grid>
+
+        <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="{DynamicResource GridSplitter}"/>
+
+        <Grid Grid.Column="4">
+            <ScrollViewer Margin="0,5,5,5"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto">
+                <StackPanel x:Name="ChartsStackPanel"
+                            Margin="0,0,0,5"/>
+            </ScrollViewer>
+        </Grid>
+
+        <custom:EmptyPanel x:Name="NoPageTemplatesGrid"
+                           Grid.Column="2"
+                           Grid.ColumnSpan="3"
+                           Visibility="Visible"
+                           Kind="FormatListBulleted"/>
+        
+        <Grid Name="PopUpBackground"
+              Grid.ColumnSpan="5"
+              Background="{DynamicResource PopUpBackground}"
+              Opacity="{DynamicResource PopUpBackgroundOpacity}"
+              Visibility="Hidden"/>
+
+        <Grid Name="AddPageTemplateGrid"
+              Grid.ColumnSpan="5"
+              Visibility="Hidden"
+              >
+            <materialDesign:Card Width="200"
+                                 Height="140"
+                                 materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                 >
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="45"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBox Name="AddPageTemplateNameTextBox"
+                             VerticalAlignment="Stretch"
+                             HorizontalAlignment="Stretch"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Left"
+                             materialDesign:HintAssist.Hint="Page template name"
+                             materialDesign:HintAssist.IsFloating="True"
+                             Margin="5,0,0,15"
+                             >
+                        <TextBox.Text>
+                            <Binding Path="AddPageTemplateName"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <validation:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <custom:ImageCardButtonWithoutShadow Margin="5"
+                                                             x:Name="AddPageTemplatePopUpCardButton"
+                                                             Kind="GroupAddOutline"
+                                                             Click="AddPageTemplatePopUpCardButton_Click"/>
+
+                        <custom:PopUpDeleteCardButton Grid.Column="1"
+                                                      Margin="5"
+                                                      x:Name="CancelAddPageTemplateCardButton"
+                                                      Kind="Cancel"
+                                                      Click="CancelAddPageTemplateCardButton_Click"/>
+                    </Grid>
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
+
+        <Grid Name="AddSensorGrid"
+              Grid.ColumnSpan="5"
+              Visibility="Hidden"
+              >
+            <materialDesign:Card Width="200"
+                                 Height="140"
+                                 materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                 >
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="45"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBox Name="AddSensorNameTextBox"
+                             VerticalAlignment="Stretch"
+                             HorizontalAlignment="Stretch"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Left"
+                             materialDesign:HintAssist.Hint="Sensor name"
+                             materialDesign:HintAssist.IsFloating="True"
+                             Margin="5,0,0,15"
+                             >
+                        <TextBox.Text>
+                            <Binding Path="AddSensorName"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <validation:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <custom:ImageCardButtonWithoutShadow Margin="5"
+                                                             x:Name="AddSensorPopUpCardButton"
+                                                             Kind="GroupAddOutline"
+                                                             Click="AddSensorPopUpCardButton_Click"/>
+
+                        <custom:PopUpDeleteCardButton Grid.Column="1"
+                                                      Margin="5"
+                                                      x:Name="CancelAddSensorCardButton"
+                                                      Kind="Cancel"
+                                                      Click="CancelAddSensorCardButton_Click"/>
+                    </Grid>
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
+
+        <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}"
+                                 Grid.ColumnSpan="7"
+                                 x:Name="MessageSnackbar"
+                                 Foreground="White"
+                                 />
+    </Grid>
+</UserControl>

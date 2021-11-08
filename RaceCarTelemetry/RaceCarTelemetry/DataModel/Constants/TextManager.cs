@@ -10,13 +10,21 @@
 
         public const string LIVE_MENU = "Live";
 
+        public const string CONFIGURATION_MENU = "Configuration";
+
         public const string GROUP_SETTINGS_MENU = "Groups";
+
+        public const string PAGE_TEMPLATES_SETTINGS_MENU = "Templates";
 
         public const string LIVE_SETTINGS_MENU = "Live";
 
         public const string GROUPS_FILE = "groups.json";
 
+        public const string PAGE_TEMPLATES_FILE = "page_templates.json";
+
         public const string CONFIGURATION_FILE = "configuration.json";
+
+        public const string API_CONFIGURATION_FILE = "api_configuration.json";
 
         public const string DEFAULT_FILES_FOLDER = "default_files";
 

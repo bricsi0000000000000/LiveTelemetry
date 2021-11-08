@@ -1,6 +1,8 @@
 ﻿using DataModel;
 using System.Windows;
 using System.Windows.Controls;
+using UI.Extensions;
+using UI.Managers;
 using static UI.UserControls.Settings.GroupSettingsMenu;
 
 namespace UI.UserControls.Groups
@@ -18,7 +20,7 @@ namespace UI.UserControls.Groups
 
             Id = group.Id;
             Name = group.Name;
-
+            
             CardItem.Text = Name;
             this.changeActiveGroup = changeActiveGroup;
         }
@@ -28,11 +30,14 @@ namespace UI.UserControls.Groups
             CardItem.IsSelected = change;
         }
 
+        public void ChangeBackgroundColor(bool change)
+        {
+            CardItem.Background = change ? ColorManager.Gray.ConvertBrush() : ColorManager.White.ConvertBrush();
+        }
 
         private void CardItem_Click(object sender, RoutedEventArgs e)
         {
             changeActiveGroup(Id);
-            //    ((GroupSettings)((SettingsMenu)MenuManager.GetMenuTab(TextManager.SettingsMenuName).Content).GetTab(TextManager.GroupsSettingsName).Content).SelectInputFile();
         }
     }
 }

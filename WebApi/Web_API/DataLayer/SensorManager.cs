@@ -24,6 +24,11 @@ namespace DataLayer
             }
         }
 
+        public static List<string> GetSensorNames(int sessionId)
+        {
+            return SessionManager.GetSessionSensors(sessionId);
+        }
+
         public static int AddSensor(Sensor newSensor)
         {
             try

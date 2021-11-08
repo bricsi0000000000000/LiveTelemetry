@@ -5,9 +5,14 @@ namespace BusinessLogic
 {
     public class ConfigurationBusinessLogic
     {
-        public LiveConfiguration LoadLiveConfiguration(string fileName, out string errorMessage)
+        public LiveConfiguration LoadLiveConfiguration(out string errorMessage)
         {
-            return new ConfigurationDataAccess().LoadLiveConfiguration(fileName, out errorMessage);
+            return new ConfigurationDataAccess().LoadLiveConfiguration(out errorMessage);
+        }
+
+        public void SaveLiveConfiguration(LiveConfiguration Configuration, out string errorMessage)
+        {
+            new ConfigurationDataAccess().SaveLiveConfiguration(Configuration, out errorMessage);
         }
     }
 }

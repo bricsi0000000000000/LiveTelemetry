@@ -17,6 +17,13 @@ namespace Web_API.Controllers
             return SensorManager.GetAllSensors();
         }
 
+        [HttpGet]
+        [Route("get_sensor_names")]
+        public List<string> GetSensorNames(int sessionId)
+        {
+            return SensorManager.GetSensorNames(sessionId);
+        }
+
         [HttpPost]
         public int Post([FromQuery] string sensorName)
         {

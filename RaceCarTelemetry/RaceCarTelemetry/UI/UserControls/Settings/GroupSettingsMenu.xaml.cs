@@ -8,9 +8,9 @@ using DataModel;
 using UI.UserControls.Groups;
 using System.Collections.Generic;
 using UI.Extensions;
-using System.Windows.Media;
 using System.Windows.Input;
 using static UI.Managers.MenuManager;
+using static UI.UserControls.Settings.SettingsMenu;
 
 namespace UI.UserControls.Settings
 {
@@ -24,9 +24,15 @@ namespace UI.UserControls.Settings
         public delegate void ChangeActiveGroup(int selectedGroupId);
         public delegate void ChangeActiveAttribute(int selectedAttributeId);
 
-        public GroupSettingsMenu(FinishedReadingGroups finishedReadingGroups)
+        private UpdateLiveMenuCharts updateLiveMenuCharts;
+        private UpdateGroupsAfterChangeInSettings updateGroupsAfterChangeInSettings;
+
+        public GroupSettingsMenu(FinishedReadingGroups finishedReadingGroups, UpdateLiveMenuCharts updateLiveMenuCharts, UpdateGroupsAfterChangeInSettings updateGroupsAfterChangeInSettings)
         {
             InitializeComponent();
+
+            this.updateLiveMenuCharts = updateLiveMenuCharts;
+            this.updateGroupsAfterChangeInSettings = updateGroupsAfterChangeInSettings;
 
             fieldsViewModel.AddGroupName =
             fieldsViewModel.AddAttributeName =
@@ -36,25 +42,25 @@ namespace UI.UserControls.Settings
 
             GroupManager.LoadGroups(out string errorMessage);
 
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
+            }
+
             finishedReadingGroups();
 
             if (GroupManager.Groups.Any())
             {
                 activeGroupId = GroupManager.Groups.First().Id;
-                InitGroups();
+                InitializeGroups();
             }
             else
             {
                 activeGroupId = -1;
             }
-
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
-            }
         }
 
-        public void InitGroups()
+        public void InitializeGroups()
         {
             GroupsStackPanel.Children.Clear();
 
@@ -64,20 +70,23 @@ namespace UI.UserControls.Settings
             }
 
             Group activeGroup = GroupManager.GetGroup(activeGroupId);
-            SelectedGroupNameTextBox.Text = activeGroup.Name;
-
-            if (activeGroup.Attributes.Any())
+            if (activeGroup != null)
             {
-                activeAttributeId = activeGroup.Attributes.First().Id;
-            }
-            else
-            {
-                activeAttributeId = -1;
-            }
+                SelectedGroupNameTextBox.Text = activeGroup.Name;
 
-            fieldsViewModel.GroupName = activeGroup.Name;
+                if (activeGroup.Attributes.Any())
+                {
+                    activeAttributeId = activeGroup.Attributes.First().Id;
+                }
+                else
+                {
+                    activeAttributeId = -1;
+                }
 
-            UpdateGroups(activeGroupId);
+                fieldsViewModel.GroupName = activeGroup.Name;
+
+                UpdateGroups(activeGroupId);
+            }
         }
 
         private void AddGroup(Group group, bool withUpdate = true)
@@ -90,6 +99,8 @@ namespace UI.UserControls.Settings
                 activeGroupId = group.Id;
                 UpdateGroups(activeGroupId);
             }
+
+            UpdateAfterChangeGroup();
         }
 
         private void RemoveGroup(int groupId)
@@ -115,6 +126,18 @@ namespace UI.UserControls.Settings
             }
 
             UpdateGroups(activeGroupId);
+
+            UpdateAfterChangeGroup();
+        }
+
+        /// <param name="groupName">Fill only if delete</param>
+        private void UpdateAfterChangeGroup()
+        {
+            NoAttributesGrid.Visibility = activeAttributeId == -1 ? Visibility.Visible: Visibility.Hidden;
+            NoGroupsGrid.Visibility = GroupManager.Groups.Any() ? Visibility.Hidden : Visibility.Visible;
+
+            updateLiveMenuCharts();
+            updateGroupsAfterChangeInSettings();
         }
 
         private void UpdateGroups(int selectedGroupId)
@@ -126,7 +149,10 @@ namespace UI.UserControls.Settings
             }
 
             Group activeGroup = GroupManager.GetGroup(activeGroupId);
-            SelectedGroupNameTextBox.Text = activeGroup.Name;
+            if (activeGroup != null)
+            {
+                SelectedGroupNameTextBox.Text = activeGroup.Name;
+            }
 
             InitAttributes();
         }
@@ -166,20 +192,21 @@ namespace UI.UserControls.Settings
                 }
                 else
                 {
-                    ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                    ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
                 }
             }
         }
 
         private void AddGroupPopUpCardButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(AddGroupNameTextBox.Text) || string.IsNullOrWhiteSpace(AddGroupNameTextBox.Text))
+            string name = AddGroupNameTextBox.Text;
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
-                ErrorManager.ShowMessage("Name can not be empty", ErrorSnackbar);
+                ErrorManager.ShowMessage("Name can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
-            Group group = new Group(GroupManager.LastGroupId++, AddGroupNameTextBox.Text);
+            Group group = new Group(GroupManager.LastGroupId++, name);
             ChangeAddGroupPopUpState(open: false);
             GroupManager.AddGroup(group, out string errorMessage);
             if (string.IsNullOrEmpty(errorMessage))
@@ -188,7 +215,7 @@ namespace UI.UserControls.Settings
             }
             else
             {
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -203,12 +230,13 @@ namespace UI.UserControls.Settings
 
             if (string.IsNullOrEmpty(errorMessage))
             {
-                InitGroups();
+                InitializeGroups();
+                UpdateAfterChangeGroup();
             }
             else
             {
                 SelectedGroupNameTextBox.Text = GroupManager.GetGroup(activeGroupId).Name;
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -228,7 +256,7 @@ namespace UI.UserControls.Settings
                     {
                         activeAttributeId = attributes.First().Id;
                     }
-                 
+
                     foreach (GroupAttribute attribute in attributes)
                     {
                         AddAttribute(attribute, withUpdate: false);
@@ -253,23 +281,36 @@ namespace UI.UserControls.Settings
                 activeAttributeId = attribute.Id;
                 UpdateAttributes(activeAttributeId);
             }
+
+            updateLiveMenuCharts();
         }
 
         private void UpdateAttributes(int selectedAttributeId)
         {
-            activeAttributeId = selectedAttributeId;
-            foreach (GroupAttributeSettingsItem item in AttributesStackPanel.Children)
-            {
-                item.ChangeColorMode(item.Id == activeAttributeId);
-            }
+            NoAttributesGrid.Visibility = activeAttributeId == -1 ? Visibility.Visible : Visibility.Hidden;
 
-            GroupAttribute activeAttribute = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId);
-            if (activeAttribute != null)
+            if (activeAttributeId != -1)
             {
-                fieldsViewModel.AttributeName = SelectedAttributeNameTextBox.Text = activeAttribute.Name;
-                SelectedAttributeLineWidthTextBox.Text = activeAttribute.LineWidth.ToString();
-                fieldsViewModel.LineWidth = activeAttribute.LineWidth;
-                SelectedAttributeColorPicker.Color = activeAttribute.ColorCode.ConvertColor();
+                activeAttributeId = selectedAttributeId;
+                foreach (GroupAttributeSettingsItem item in AttributesStackPanel.Children)
+                {
+                    item.ChangeColorMode(item.Id == activeAttributeId);
+                }
+
+                GroupAttribute activeAttribute = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId);
+                if (activeAttribute != null)
+                {
+                    fieldsViewModel.AttributeName = SelectedAttributeNameTextBox.Text = activeAttribute.Name;
+                    SelectedAttributeLineWidthTextBox.Text = activeAttribute.LineWidth.ToString();
+                    fieldsViewModel.LineWidth = activeAttribute.LineWidth;
+                    SelectedAttributeColorPicker.Color = activeAttribute.ColorCode.ConvertColor();
+                }
+
+                // change group settings item background color if empty
+                foreach (GroupSettingsItem item in GroupsStackPanel.Children)
+                {
+                    item.ChangeBackgroundColor(GroupManager.GetGroup(item.Id).Attributes.Count == 0);
+                }
             }
         }
 
@@ -290,7 +331,7 @@ namespace UI.UserControls.Settings
                 }
                 else
                 {
-                    ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                    ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
                 }
             }
         }
@@ -319,6 +360,7 @@ namespace UI.UserControls.Settings
             }
 
             UpdateAttributes(activeAttributeId);
+            updateLiveMenuCharts();
         }
 
         private void ChangeAddAttriutePopUpState(bool open)
@@ -340,14 +382,14 @@ namespace UI.UserControls.Settings
             string attributeName = AddAttributeNameTextBox.Text;
             if (string.IsNullOrEmpty(attributeName) || string.IsNullOrWhiteSpace(attributeName))
             {
-                ErrorManager.ShowMessage("Name can not be empty", ErrorSnackbar);
+                ErrorManager.ShowMessage("Name can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
             string attributeLineWidth = AddAttributeLineWidthTextBox.Text;
             if (string.IsNullOrEmpty(attributeLineWidth) || string.IsNullOrWhiteSpace(attributeLineWidth))
             {
-                ErrorManager.ShowMessage("Line width can not be empty", ErrorSnackbar);
+                ErrorManager.ShowMessage("Line width can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
@@ -355,18 +397,18 @@ namespace UI.UserControls.Settings
             {
                 if (lineWidth <= 0)
                 {
-                    ErrorManager.ShowMessage("Line width must be greater than 0", ErrorSnackbar);
+                    ErrorManager.ShowMessage("Line width must be greater than 0", MessageSnackbar, MessageType.Error);
                     return;
                 }
             }
             else
             {
-                ErrorManager.ShowMessage("Line width must be a number", ErrorSnackbar);
+                ErrorManager.ShowMessage("Line width must be a number", MessageSnackbar, MessageType.Error);
                 return;
             }
 
             Group activeGroup = GroupManager.GetGroup(activeGroupId);
-            GroupAttribute attribute = new GroupAttribute(activeGroup.LastAttributeId++, activeGroupId, attributeName, ColorManager.GetGetChartColor.ToString(), lineWidth);
+            GroupAttribute attribute = new GroupAttribute(activeGroup.LastAttributeId++, activeGroupId, attributeName, ColorManager.GetChartColor.ToString(), lineWidth);
             ChangeAddAttriutePopUpState(open: false);
             GroupManager.AddAttributeToGroup(activeGroupId, attribute, out string errorMessage);
 
@@ -376,7 +418,7 @@ namespace UI.UserControls.Settings
             }
             else
             {
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -392,11 +434,12 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(errorMessage))
             {
                 InitAttributes(wasSelectedAttribute: true);
+                updateLiveMenuCharts();
             }
             else
             {
                 SelectedAttributeNameTextBox.Text = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId).Name;
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -405,7 +448,7 @@ namespace UI.UserControls.Settings
             string attributeLineWidth = SelectedAttributeLineWidthTextBox.Text;
             if (string.IsNullOrEmpty(attributeLineWidth) || string.IsNullOrWhiteSpace(attributeLineWidth))
             {
-                ErrorManager.ShowMessage("Line width can not be empty", ErrorSnackbar);
+                ErrorManager.ShowMessage("Line width can not be empty", MessageSnackbar, MessageType.Error);
                 return;
             }
 
@@ -413,13 +456,13 @@ namespace UI.UserControls.Settings
             {
                 if (lineWidth <= 0)
                 {
-                    ErrorManager.ShowMessage("Line width must be greater than 0", ErrorSnackbar);
+                    ErrorManager.ShowMessage("Line width must be greater than 0", MessageSnackbar, MessageType.Error);
                     return;
                 }
             }
             else
             {
-                ErrorManager.ShowMessage("Line width must be a number", ErrorSnackbar);
+                ErrorManager.ShowMessage("Line width must be a number", MessageSnackbar, MessageType.Error);
                 return;
             }
 
@@ -428,11 +471,12 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(errorMessage))
             {
                 InitAttributes(wasSelectedAttribute: true);
+                updateLiveMenuCharts();
             }
             else
             {
                 SelectedAttributeLineWidthTextBox.Text = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId).LineWidth.ToString();
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
 
@@ -443,11 +487,12 @@ namespace UI.UserControls.Settings
             if (string.IsNullOrEmpty(errorMessage))
             {
                 InitAttributes(wasSelectedAttribute: true);
+                updateLiveMenuCharts();
             }
             else
             {
                 SelectedAttributeColorPicker.Color = GroupManager.GetGroup(activeGroupId).GetAttribute(activeAttributeId).ColorCode.ConvertColor();
-                ErrorManager.ShowMessage(errorMessage, ErrorSnackbar);
+                ErrorManager.ShowMessage(errorMessage, MessageSnackbar, MessageType.Error);
             }
         }
     }
