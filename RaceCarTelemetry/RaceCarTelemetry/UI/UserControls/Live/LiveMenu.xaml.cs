@@ -118,8 +118,6 @@ namespace UI.UserControls.Live
 
         public void InitilaizeHttpClient()
         {
-            //  ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
-
             client = new HttpClient
             {
                 Timeout = TimeSpan.FromMinutes(ConfigurationManager.Configuration.TimeOut),
@@ -294,7 +292,6 @@ namespace UI.UserControls.Live
             Mouse.OverrideCursor = null;
         }
 
-
         private void SensorCheckBox_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             CheckBox checkBox = (CheckBox)sender;
@@ -313,7 +310,6 @@ namespace UI.UserControls.Live
                 DragDrop.DoDragDrop(checkBox, sensorName, DragDropEffects.Move);
             }
         }
-
 
         private void SensorCheckBox_Checked(object sender, RoutedEventArgs e)
         {

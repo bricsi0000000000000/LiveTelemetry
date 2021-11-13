@@ -5,13 +5,10 @@ namespace UI.UserControls.Charts
 {
     public partial class ChartValueItem : UserControl
     {
-        private readonly string groupName;
-
-        private string colorCode;
         private string attributeName;
         private int inputFileId;
 
-        public ChartValueItem(string channelName, string unitOfMeasure, string groupName)
+        public ChartValueItem(string channelName, string unitOfMeasure = "")
         {
             InitializeComponent();
 
@@ -19,7 +16,6 @@ namespace UI.UserControls.Charts
             ValueLabel.Opacity = .4f;
             UnitOfMeasureLabel.Opacity = .4f;
 
-            this.groupName = groupName;
             AttributeName = channelName;
             UnitOfMeasureLabel.Content = unitOfMeasure;
 
@@ -73,7 +69,6 @@ namespace UI.UserControls.Charts
             UnitOfMeasureLabel.Opacity = 1;
 
             this.inputFileId = inputFileId;
-            colorCode = colorText;
             ColorCard.Background = colorText.ConvertBrush();
 
             SetAttributeName(attributeName);

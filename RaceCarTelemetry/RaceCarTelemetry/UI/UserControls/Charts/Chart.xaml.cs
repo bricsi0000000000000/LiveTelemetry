@@ -24,8 +24,6 @@ namespace UI.UserControls.Charts
 
         public List<string> AttributeNames { get; private set; }
 
-        public bool HasVLine { get; set; } = false;
-
         private List<ChartValue> values = new List<ChartValue>();
         private Snackbar messageSnackbar;
         private Action<string, string> afterGroupDrop;
@@ -63,8 +61,7 @@ namespace UI.UserControls.Charts
                                 int minRenderIndex,
                                 int maxRenderIndex,
                                 string xAxisLabel = "",
-                                int lineWidth = 1
-                                )
+                                int lineWidth = 1)
         {
             try
             {
@@ -126,7 +123,7 @@ namespace UI.UserControls.Charts
 
         private ChartValueItem CreateSideValue(string attributeName)
         {
-            ChartValueItem chartValue = new ChartValueItem(attributeName, "", ChartName);
+            ChartValueItem chartValue = new ChartValueItem(attributeName);
 
             return chartValue;
         }

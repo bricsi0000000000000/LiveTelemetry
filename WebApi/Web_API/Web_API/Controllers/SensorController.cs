@@ -10,6 +10,9 @@ namespace Web_API.Controllers
     [ApiController]
     public class SensorController : ControllerBase
     {
+        /// <summary>
+        /// Get all sensor
+        /// </summary>
         [HttpGet]
         [Route("get_all")]
         public IEnumerable<Sensor> GetAll()
@@ -17,6 +20,9 @@ namespace Web_API.Controllers
             return SensorManager.GetAllSensors();
         }
 
+        /// <summary>
+        /// Get sensor names for <paramref name="sessionId"/>
+        /// </summary>
         [HttpGet]
         [Route("get_sensor_names")]
         public List<string> GetSensorNames(int sessionId)
@@ -24,6 +30,9 @@ namespace Web_API.Controllers
             return SensorManager.GetSensorNames(sessionId);
         }
 
+        /// <summary>
+        /// Post a new sensor
+        /// </summary>
         [HttpPost]
         public int Post([FromQuery] string sensorName)
         {

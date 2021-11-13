@@ -12,6 +12,9 @@ namespace Web_API.Controllers
     [ApiController]
     public class PackageController : ControllerBase
     {
+        /// <summary>
+        /// Get a package based on <paramref name="packageId"/> from <paramref name="sessionId"/>
+        /// </summary>
         [HttpGet]
         [Route("get_single/{packageId}/{sessionId}")]
         public List<SensorValue> Get(int packageId, int sessionId)
@@ -19,7 +22,9 @@ namespace Web_API.Controllers
             return PackageManager.GetPackageSensorValues(packageId, sessionId);
         }
 
-        /// <returns>All package, that is after <paramref name="lastPackageId"/>.</returns>
+        /// <summary>
+        /// Get all package, that is after <paramref name="lastPackageId"/> from <paramref name="sessionId"/>
+        /// </summary>
         [HttpGet]
         [Route("get_after/{lastPackageId}/{sessionId}")]
         public IEnumerable<SensorValue> GetAfter(int lastPackageId, int sessionId)
@@ -27,6 +32,9 @@ namespace Web_API.Controllers
             return PackageManager.GetPackagesSensorValues(lastPackageId, sessionId);
         }
 
+        /// <summary>
+        /// Get all package for <paramref name="sessionId"/>
+        /// </summary>
         [HttpGet]
         [Route("get_all/{sessionId}")]
         public IEnumerable<SensorValue> GetAll(int sessionId)
@@ -34,6 +42,11 @@ namespace Web_API.Controllers
             return PackageManager.GetAllPackagesSensorValues(sessionId);
         }
 
+        /// <summary>
+        /// Post a new package
+        /// </summary>
+        /// <response code="200">Sucessfully added</response>
+        /// <response code="500">There was an error posting the package</response>       
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
@@ -56,7 +69,7 @@ namespace Web_API.Controllers
                     SensorManager.AddSensorValue(sensorValue);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return HttpStatusCode.InternalServerError;
             }

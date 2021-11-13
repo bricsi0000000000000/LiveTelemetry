@@ -9,6 +9,7 @@ namespace UI.Converters
     {
         public MathOperation Operation { get; set; }
 
+#nullable enable
         public object? Convert(object?[]? value, Type? targetType, object? parameter, CultureInfo? culture)
         {
             if (value is null || value.Length < 2 || value[0] is null || value[1] is null) return Binding.DoNothing;

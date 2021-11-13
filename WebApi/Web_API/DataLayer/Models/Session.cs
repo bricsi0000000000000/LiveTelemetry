@@ -6,7 +6,7 @@ namespace DataLayer.Models
     public class Session
     {
         [Key]
-        public int SessionId { get; set; } // PK
+        public int SessionId { get; set; } // primary key
 
         public bool IsLive { get; set; }
 

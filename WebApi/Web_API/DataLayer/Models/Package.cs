@@ -8,7 +8,7 @@ namespace DataLayer.Models
         public int PackageId { get; set; }
 
         [Required]
-        public int SessionId { get; set; } // FK
+        public int SessionId { get; set; } // foreign key
 
         [Required]
         public long SentTime { get; set; }

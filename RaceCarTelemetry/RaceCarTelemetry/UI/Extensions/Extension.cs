@@ -20,11 +20,6 @@ namespace UI.Extensions
             return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
-        public static System.Windows.Media.Color ConvertToMediaColor(this System.Drawing.Color color)
-        {
-            return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
-        }
-
         public static System.Windows.Media.SolidColorBrush ConvertBrush(this string colorText)
         {
             return new System.Windows.Media.SolidColorBrush(colorText.ConvertColor());
@@ -36,11 +31,11 @@ namespace UI.Extensions
         }
 
 
-        public static void Swap<T>(this List<T> list, int indexA, int indexB)
+        public static void SwapItems<T>(this List<T> list, int firstIndex, int secondIndex)
         {
-            T temporary = list[indexA];
-            list[indexA] = list[indexB];
-            list[indexB] = temporary;
+            T temporary = list[firstIndex];
+            list[firstIndex] = list[secondIndex];
+            list[secondIndex] = temporary;
         }
     }
 }

@@ -54,10 +54,5 @@ namespace UI.Managers
             menuTabs.Add(tab);
             tabControl.Items.Add(tab);
         }
-
-        public static TabItem GetMenuTab(string name)
-        {
-            return menuTabs.Find(x => x.Header.Equals(name));
-        }
     }
 }

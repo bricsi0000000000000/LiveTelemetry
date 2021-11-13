@@ -39,6 +39,7 @@ namespace UI.UserControls.Settings
             DeleteSession,
             ChangeSessionState
         }
+
         private ConfirmPopupStates confirmPopupStates;
 
         public delegate void ChangeSelectedSession(int selectedSessionId);
@@ -110,8 +111,6 @@ namespace UI.UserControls.Settings
 
         private void InitilaizeHttpClient()
         {
-            //  ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
-
             client = new HttpClient
             {
                 Timeout = TimeSpan.FromMinutes(ConfigurationManager.Configuration.TimeOut),
@@ -201,8 +200,6 @@ namespace UI.UserControls.Settings
 
             SessionsCoverGridGrid.Visibility = Visibility.Hidden;
             SessionDataGridCover.Visibility = Visibility.Hidden;
-
-            //MenuManager.LiveTelemetry.ResetCharts();
         }
 
         private void UpdateSelectedSession(int sessionId)

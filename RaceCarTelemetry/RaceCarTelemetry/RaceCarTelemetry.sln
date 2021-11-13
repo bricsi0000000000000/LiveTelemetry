@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{53233F3D-F8F5-4194-A1FA-5E0DCE446098}"
 EndProject
@@ -16,8 +16,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTe
 		{40F2223A-0C46-43CE-B732-5309EAC0B38C} = {40F2223A-0C46-43CE-B732-5309EAC0B38C}
 		{8A948A9A-3640-4948-9D05-4F2416330E1F} = {8A948A9A-3640-4948-9D05-4F2416330E1F}
 	EndProjectSection
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{50CE05C9-7943-4449-81DA-0B9704689399}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,8 +43,6 @@ Global
 		{FDFFCE44-AE9C-4756-95A0-FB720C437A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDFFCE44-AE9C-4756-95A0-FB720C437A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDFFCE44-AE9C-4756-95A0-FB720C437A08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{50CE05C9-7943-4449-81DA-0B9704689399}.Debug|Any CPU.ActiveCfg = Debug
-		{50CE05C9-7943-4449-81DA-0B9704689399}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

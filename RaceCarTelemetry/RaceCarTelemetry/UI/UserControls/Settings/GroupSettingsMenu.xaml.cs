@@ -130,7 +130,6 @@ namespace UI.UserControls.Settings
             UpdateAfterChangeGroup();
         }
 
-        /// <param name="groupName">Fill only if delete</param>
         private void UpdateAfterChangeGroup()
         {
             NoAttributesGrid.Visibility = activeAttributeId == -1 ? Visibility.Visible: Visibility.Hidden;
@@ -240,7 +239,6 @@ namespace UI.UserControls.Settings
             }
         }
 
-
         public void InitAttributes(bool wasSelectedAttribute = false)
         {
             AttributesStackPanel.Children.Clear();
@@ -306,7 +304,6 @@ namespace UI.UserControls.Settings
                     SelectedAttributeColorPicker.Color = activeAttribute.ColorCode.ConvertColor();
                 }
 
-                // change group settings item background color if empty
                 foreach (GroupSettingsItem item in GroupsStackPanel.Children)
                 {
                     item.ChangeBackgroundColor(GroupManager.GetGroup(item.Id).Attributes.Count == 0);

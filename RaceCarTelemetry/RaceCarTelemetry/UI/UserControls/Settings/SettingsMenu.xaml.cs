@@ -71,10 +71,5 @@ namespace UI.UserControls.Settings
             menuTabs.Add(tab);
             settingsTabControl.Items.Add(tab);
         }
-
-        public TabItem GetTab(string name)
-        {
-            return menuTabs.Find(x => x.Header.Equals(name));
-        }
     }
 }

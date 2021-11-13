@@ -1,7 +1,6 @@
 ﻿using DataLayer;
 using DataLayer.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -11,6 +10,10 @@ namespace Web_API.Controllers
     [ApiController]
     public class SessionController : ControllerBase
     {
+        /// <summary>
+        /// Check if there is a connection with the server.
+        /// Always returns true
+        /// </summary>
         [HttpGet]
         [Route("health_check")]
         public bool HealthCheck()
@@ -18,7 +21,9 @@ namespace Web_API.Controllers
             return true;
         }
 
-        /// <returns>Returns the Id of the active session.</returns>
+        /// <summary>
+        /// Get the live session
+        /// </summary>
         [HttpGet]
         [Route("live")]
         public Session Get()
@@ -26,6 +31,9 @@ namespace Web_API.Controllers
             return SessionManager.ActiveSession;
         }
 
+        /// <summary>
+        /// Get all sessions
+        /// </summary>
         [HttpGet]
         [Route("all")]
         public List<Session> GetAll()
@@ -33,6 +41,9 @@ namespace Web_API.Controllers
             return SessionManager.AllSessions;
         }
 
+        /// <summary>
+        /// Get the sensor names for the live session
+        /// </summary>
         [HttpGet]
         [Route("active_session_sensors")]
         public List<string> GetActiveSessionSensors()
