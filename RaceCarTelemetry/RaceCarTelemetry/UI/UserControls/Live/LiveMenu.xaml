@@ -108,7 +108,18 @@
             <materialDesign:Card Grid.Row="2"
                                  Margin="5,5,0,0">
                 <Grid>
-                    <ScrollViewer Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Sensors"
+                           FontWeight="Bold"
+                           VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Center"/>
+
+                    <ScrollViewer Grid.Row="1"
+                                  Margin="5">
                         <StackPanel Name="SensorsStackPanel" />
                     </ScrollViewer>
 
@@ -128,7 +139,18 @@
             <materialDesign:Card Grid.Row="4"
                                  Margin="5,0,0,0">
                 <Grid>
-                    <ScrollViewer Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Groups"
+                           FontWeight="Bold"
+                           VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Center"/>    
+                    
+                    <ScrollViewer Grid.Row="1"
+                                  Margin="5">
                         <StackPanel Name="GroupsStackPanel" />
                     </ScrollViewer>
 
