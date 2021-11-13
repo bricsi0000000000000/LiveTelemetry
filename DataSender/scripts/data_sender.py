@@ -108,7 +108,7 @@ plt.plot(speeds)
 plt.savefig('speeds.png')
 '''
 
-# ---------------------CREATE PACKAGE-------------------------------------------------------------------------------------------
+# ---------------------FUNCTIONS------------------------------------------------------------------------------------------------
 
 def prepare_sensor_values(sensor_values):
   prepared_sensor_values = []
@@ -136,7 +136,35 @@ def make_package(prepared_sensor_values_list):
       print(v.repr_JSON())
 
   return package
+
+
+def collect_data():
+  prepared_sensor1_values = prepare_sensor_values(sensor1_values)
+  prepared_sensor2_values = prepare_sensor_values(sensor2_values)
+
+  return make_package([prepared_sensor1_values, prepared_sensor2_values])
+
+
+def send_data():
+  successfull = False
+  
+  while successfull == False:
+    try:
+      package_json = json.dumps(package.repr_JSON(), cls=ComplexEncoder)
+      send_package_response = requests.post(URL + POST_PACKAGE_API_CALL + package_json, verify = False)
+      successfull = send_package_response.status_code == HTTP_STATUS_CODE_OK
+    except Exception as e:
+      print("There is no connection to the server. Trying again in " + str(WAIT_BETWEEN_TRIES) + " seconds")
+      time.sleep(WAIT_BETWEEN_TRIES)
+            
+    if successfull == False:
+      print("An error occurred while sending package [" + str(package_id) + "]")
+      time.sleep(WAIT_BETWEEN_TRIES)
+  
+  return successfull
 # ------------------------------------------------------------------------------------------------------------------------------
+
+
 
 print("----------------------------")
 print("Sending sensors [",end='')
@@ -174,30 +202,14 @@ while send_data:
   # ---------------------IF THERE IS A LIVE SESSION, COLLECT DATA-----------------------------------------------------------------
 
     if can_send_data == True:
-      prepared_sensor1_values = prepare_sensor_values(sensor1_values)
-      prepared_sensor2_values = prepare_sensor_values(sensor2_values)
-
-      package = make_package([prepared_sensor1_values, prepared_sensor2_values])
+      package = collect_data()
 
       if len(package.sensor_values) == 0:
         stop_sending_data = True
       else:
         data_index = data_index + MAX_BUFFER_SIZE
 
-        successfull = False
-        while successfull == False:
-          try:
-            package_json = json.dumps(package.repr_JSON(), cls=ComplexEncoder)
-            send_package_response = requests.post(URL + POST_PACKAGE_API_CALL + package_json, verify = False)
-            successfull = send_package_response.status_code == HTTP_STATUS_CODE_OK
-          except Exception as e:
-            print("There is no connection to the server. Trying again in " + str(WAIT_BETWEEN_TRIES) + " seconds")
-            time.sleep(WAIT_BETWEEN_TRIES)
-            
-          if successfull == False:
-            print("An error occurred while sending package [" + str(package_id) + "]")
-            time.sleep(WAIT_BETWEEN_TRIES)
-        
+        successfull = send_data()
 
         if successfull == True:    
           print("Package [" + str(package_id) + "] sent successfully to session [" + live_session_name + "]")
