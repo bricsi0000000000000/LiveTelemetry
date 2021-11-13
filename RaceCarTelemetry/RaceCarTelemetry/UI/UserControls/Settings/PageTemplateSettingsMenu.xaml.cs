@@ -9,7 +9,6 @@ using UI.UserControls.PageTemplates;
 using UI.ValidationRules;
 using UI.Extensions;
 using static UI.Managers.MenuManager;
-using UI.UserControls.Charts;
 
 namespace UI.UserControls.Settings
 {
@@ -201,7 +200,7 @@ namespace UI.UserControls.Settings
                 int indexA = charts.FindIndex(x => x.Index == oldIndex);
                 int indexB = indexA - 1;
 
-                charts.Swap(indexA, indexB);
+                charts.SwapItems(indexA, indexB);
             }
 
             RearrangeCharts();
@@ -214,7 +213,7 @@ namespace UI.UserControls.Settings
                 int indexA = charts.FindIndex(x => x.Index == oldIndex);
                 int indexB = indexA + 1;
 
-                charts.Swap(indexA, indexB);
+                charts.SwapItems(indexA, indexB);
             }
 
             RearrangeCharts();

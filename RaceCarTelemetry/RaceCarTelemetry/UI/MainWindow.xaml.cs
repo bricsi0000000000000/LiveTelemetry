@@ -10,7 +10,7 @@ namespace UI
         {
             InitializeComponent();
 
-            Title = "Race Car Telemetry 5.2";
+            Title = "Race Car Telemetry 5.3";
 
             ErrorManager.Initialize();
 

@@ -10,7 +10,7 @@ namespace DataModel
 
         public int LastAttributeId;
 
-        public Group(int id, string name, string horizontalAxis = "x")
+        public Group(int id, string name)
         {
             Id = id;
             Name = name.Trim();

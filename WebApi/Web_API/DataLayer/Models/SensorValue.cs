@@ -5,16 +5,16 @@ namespace DataLayer.Models
     public class SensorValue
     {
         [Key]
-        public int SensorValueId { get; set; } // PK
+        public int SensorValueId { get; set; } // primary key
 
         [Required]
         public double Value { get; set; }
 
         [Required]
-        public int SensorId { get; set; } // FK
+        public int SensorId { get; set; } // foreign key
 
         [Required]
-        public int SessionId { get; set; } // FK
+        public int SessionId { get; set; } // foreign key
 
         [Required]
         public int PackageId { get; set; }

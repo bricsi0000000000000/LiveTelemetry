@@ -7,9 +7,14 @@ namespace UI.ValidationRules
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            return string.IsNullOrWhiteSpace((value ?? "").ToString())
-                ? new ValidationResult(false, "Field is required")
-                : ValidationResult.ValidResult;
+            if (string.IsNullOrWhiteSpace((value ?? "").ToString()))
+            {
+                return new ValidationResult(false, "Field is required");
+            }
+            else
+            {
+                return ValidationResult.ValidResult;
+            }
         }
     }
 }

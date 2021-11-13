@@ -58,45 +58,9 @@ namespace UI.Managers
             SavePageTemplates(out errorMessage);
         }
 
-        public static void ChangePageTemplateName(int id, string name, out string errorMessage)
-        {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
-            {
-                errorMessage = "Name can not be empty";
-                return;
-            }
-
-            if (IsPageTemplateExists(name))
-            {
-                errorMessage = $"{name} already exists";
-                return;
-            }
-
-            PageTemplate template = GetPageTemplate(id);
-            if (!template.Name.Equals(name))
-            {
-                template.Name = name;
-                SavePageTemplates(out errorMessage);
-            }
-            else
-            {
-                errorMessage = string.Empty;
-            }
-        }
-
         public static void SavePageTemplates(out string errorMessage)
         {
             pageTemplateBusinessLogic.SavePageTemplates(PageTemplates, out errorMessage);
-        }
-
-        public static void DeleteAllChartFromTemplates(out string errorMessage)
-        {
-            foreach (PageTemplate template in PageTemplates)
-            {
-                template.Charts.Clear();
-            }
-
-            SavePageTemplates(out errorMessage);
         }
     }
 }

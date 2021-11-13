@@ -50,10 +50,12 @@ namespace UI.UserControls.PageTemplates
         {
             Random random = new Random();
             double[] data = new double[10];
+
             for (int i = 0; i < data.Length; i++)
             {
                 data[i] = random.NextDouble();
             }
+
             ScottPlotChart.plt.PlotSignal(ys: data,
                                           color: ColorManager.GetChartColor.ToString().ConvertToChartColor(),
                                           lineWidth: 1,

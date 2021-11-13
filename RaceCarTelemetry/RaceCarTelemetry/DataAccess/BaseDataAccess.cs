@@ -10,10 +10,14 @@ namespace DataAccess
 {
     public abstract class BaseDataAccess
     {
+        /// <summary>
+        /// Is the file reachable, exists and empty
+        /// </summary>
         protected virtual bool CheckFile(string fileName, out string errorMessage)
         {
             try
             {
+                // need to check this before IsFileExists because if the file exists, but not reachable, it will throw an error
                 if (!IsFileReachable(fileName, out errorMessage))
                 {
                     return false;

@@ -22,25 +22,25 @@ namespace DataAccess
             return await CallGetApi<List<string>>(client, apiCall);
         }
 
-        /// <returns>Result code</returns>
+        /// <returns>Http result code</returns>
         public async Task<int> ChangeSessionName(HttpClient client, LiveSession session, string apiCall)
         {
             return await CallPutApi(client, apiCall, session);
         }
 
-        /// <returns>Result code</returns>
+        /// <returns>Http result code</returns>
         public async Task<int> ChangeSessionState(HttpClient client, int selectedSessionId, string apiCall)
         {
             return await CallPutApi(client, apiCall, selectedSessionId);
         }
 
-        /// <returns>Result code</returns>
+        /// <returns>Http result code</returns>
         public async Task<int> DeleteSession(HttpClient client, string apiCall)
         {
             return await CallDeleteApi(client, apiCall);
         }
 
-        /// <returns>Result code</returns>
+        /// <returns>Http result code</returns>
         public async Task<int> AddSession(HttpClient client, LiveSession session, string apiCall)
         {
             return await CallPostApi(client, apiCall, session);
