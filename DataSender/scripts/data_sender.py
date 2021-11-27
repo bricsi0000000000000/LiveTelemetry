@@ -32,13 +32,10 @@ URL = "{0}://{1}:{2}/".format('https' if configuration['isHTTPS'] == True else '
 
 # ------------------------------------------------------------------------------------------------------------------------------
 
-send_data = True
 can_send_data = False
 
 live_session_id = -1
 live_session_name = ''
-
-stop_sending_data = False
 
 package_id = 1
 
@@ -91,22 +88,8 @@ VX  = "vx"
 sensor2 = Sensor(get_sensor_id(VX), VX)
 sensor2_values = read_sensor_values_from_file(sensor2)
 
-if False: # use for debugging
-  for s in sensor1_values:
-    print(s.repr_JSON())
-
-  print()
-
-  for s in sensor2_values:
-    print(s.repr_JSON())
-
 
 # ------------------------------------------------------------------------------------------------------------------------------
-'''
-import matplotlib.pyplot as plt
-plt.plot(speeds)
-plt.savefig('speeds.png')
-'''
 
 # ---------------------FUNCTIONS------------------------------------------------------------------------------------------------
 
@@ -144,38 +127,22 @@ def collect_data():
 
   return make_package([prepared_sensor1_values, prepared_sensor2_values])
 
-
-def send_data():
-  successfull = False
-  
-  while successfull == False:
-    try:
-      package_json = json.dumps(package.repr_JSON(), cls=ComplexEncoder)
-      send_package_response = requests.post(URL + POST_PACKAGE_API_CALL + package_json, verify = False)
-      successfull = send_package_response.status_code == HTTP_STATUS_CODE_OK
-    except Exception as e:
-      print("There is no connection to the server. Trying again in " + str(WAIT_BETWEEN_TRIES) + " seconds")
-      time.sleep(WAIT_BETWEEN_TRIES)
-            
-    if successfull == False:
-      print("An error occurred while sending package [" + str(package_id) + "]")
-      time.sleep(WAIT_BETWEEN_TRIES)
-  
-  return successfull
 # ------------------------------------------------------------------------------------------------------------------------------
 
+def main():
+  stop_sending_data = False
+  data_index = 0
+  package_id = 0
 
+  print("----------------------------")
+  print("Sending sensors [",end='')
+  print(sensor1.name,end='')
+  print(", ",end='')
+  print(sensor2.name,end='')
+  print("]")
+  print("----------------------------")
+  print()
 
-print("----------------------------")
-print("Sending sensors [",end='')
-print(sensor1.name,end='')
-print(", ",end='')
-print(sensor2.name,end='')
-print("]")
-print("----------------------------")
-print()
-
-while send_data:
   while stop_sending_data == False:
   # ----------ALWAYS CHECK IF THE LIVE STATUS OF THE LIVE SESSION IS CHANGED------------------------------------------------------
 
@@ -209,7 +176,20 @@ while send_data:
       else:
         data_index = data_index + MAX_BUFFER_SIZE
 
-        successfull = send_data()
+        successfull = False
+  
+        while successfull == False:
+          try:
+            package_json = json.dumps(package.repr_JSON(), cls=ComplexEncoder)
+            send_package_response = requests.post(URL + POST_PACKAGE_API_CALL + package_json, verify = False)
+            successfull = send_package_response.status_code == HTTP_STATUS_CODE_OK
+          except Exception as e:
+            print("There is no connection to the server. Trying again in " + str(WAIT_BETWEEN_TRIES) + " seconds")
+            time.sleep(WAIT_BETWEEN_TRIES)
+                  
+          if successfull == False:
+            print("An error occurred while sending package [" + str(package_id) + "]")
+            time.sleep(WAIT_BETWEEN_TRIES)
 
         if successfull == True:    
           print("Package [" + str(package_id) + "] sent successfully to session [" + live_session_name + "]")
@@ -217,12 +197,14 @@ while send_data:
         package_id = package_id + 1
         time.sleep(WAIT_BETWEEN_SENDING)
 
-  send_data = False
-      
-# ------------------------------------------------------------------------------------------------------------------------------
+        
+  # ------------------------------------------------------------------------------------------------------------------------------
 
-print("----------------------------")
-print("Stopped sending data")
-print("Summary:")
-print("\tAll sent packages: " + str(package_id))
-print("----------------------------")
+  print("----------------------------")
+  print("Stopped sending data")
+  print("Summary:")
+  print("\tAll sent packages: " + str(package_id))
+  print("----------------------------")
+
+
+main()

@@ -4,7 +4,7 @@
   "wait_between_sending" : 2,
   "max_buffer_size" : 5,
   "isHTTPS" : false,
-  "url" : "10.0.0.100",
+  "url" : "10.0.0.101",
   "port" : 5000,
   "ignore_warnings" : true,
   "get_live_session_api_call" : "api/Session/live",
